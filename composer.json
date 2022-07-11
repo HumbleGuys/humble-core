@@ -29,9 +29,12 @@
     },
     "require-dev": {
         "pestphp/pest": "^1.21",
-        "laravel/pint": "^0.2.3"
+        "laravel/pint": "^0.2.3",
+        "phpstan/phpstan": "^1.8"
     },
     "scripts": {
+        "analyse": "./vendor/bin/phpstan analyse src tests",
+        "lint": "./vendor/bin/pint -v",
         "test": "./vendor/bin/pest"
     }
 }

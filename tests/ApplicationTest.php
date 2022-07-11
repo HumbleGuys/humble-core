@@ -18,6 +18,14 @@ test('default paths', function () {
     expect($app->resourcePath())->toBe(dirname(__DIR__).'/resources');
 });
 
+test('app helper method returns application', function () {
+    $app = new Application(dirname(__DIR__));
+
+    $appFromHelper = app();
+
+    expect($app)->toBe($appFromHelper);
+});
+
 test('is running in console', function () {
     $app = new Application(dirname(__DIR__));
 
