@@ -33,6 +33,8 @@ test('is running in console', function () {
 });
 
 test('config', function () {
+    $app = new Application(dirname(__DIR__));
+
     config(['test' => 'myvalue']);
 
     expect(config('test'))->toBe('myvalue');
