@@ -1,0 +1,1 @@
+Hello, <?php echo e($name); ?><?php /**PATH /home/kimla/Sites/humble-core/storage/cache/2c9b426567732243f044c120463ef7d55517177b.blade.php ENDPATH**/ ?>

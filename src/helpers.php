@@ -1,6 +1,7 @@
 <?php
 
 use HumbleCore\App\Application;
+use Illuminate\Contracts\View\Factory as ViewFactory;
 
 if (! function_exists('app')) {
     function app(?string $abstract = null, array $parameters = [])
@@ -30,5 +31,18 @@ if (! function_exists('config')) {
         }
 
         return app('config')->get($key, $default);
+    }
+}
+
+if (! function_exists('view')) {
+    function view(?string $view = null, array $data = [], array $mergeData = []): string
+    {
+        $factory = app(ViewFactory::class);
+
+        if (func_num_args() === 0) {
+            return $factory;
+        }
+
+        return $factory->make($view, $data, $mergeData)->render();
     }
 }

@@ -2,10 +2,15 @@
 
 namespace HumbleCore\App;
 
+use HumbleCore\View\ViewServiceProvider;
 use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
+use Illuminate\Events\EventServiceProvider;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\ServiceProvider;
 
 class Application extends Container
 {
@@ -19,6 +24,16 @@ class Application extends Container
 
     protected $isRunningInConsole;
 
+    protected $booted = false;
+
+    protected $bootingCallbacks = [];
+
+    protected $bootedCallbacks = [];
+
+    protected $serviceProviders = [];
+
+    protected $loadedProviders = [];
+
     public function __construct(?string $basePath = null)
     {
         if ($basePath) {
@@ -29,6 +44,7 @@ class Application extends Container
 
         $this->registerBaseBindings();
         $this->registerBaseServiceProviders();
+        $this->registerCoreContainerAliases();
     }
 
     public function setBasePath(string $basePath): self
@@ -49,13 +65,124 @@ class Application extends Container
         $this->instance(Container::class, $this);
 
         $this->instance('config', new Repository);
+
+        $filesystem = new Filesystem;
+
+        $this->bind('files', function ($app) use ($filesystem) {
+            return $filesystem;
+        });
+
+        $this->instance(\Illuminate\Contracts\Foundation\Application::class, $this);
+
+        $this->bind(
+            'Illuminate\Contracts\Foundation\Application',
+            function () {
+                return $this;
+            }
+        );
     }
 
     protected function registerBaseServiceProviders(): void
     {
-        //$this->register(new EventServiceProvider($this));
+        $this->register(new EventServiceProvider($this));
+        $this->register(new ViewServiceProvider($this));
         //$this->register(new LogServiceProvider($this));
         //$this->register(new RoutingServiceProvider($this));
+    }
+
+    protected function registerServiceProviders()
+    {
+        $providers = config('app.providers') ?? [];
+
+        //$providers = array_merge($providers, $this->make(PackageManifest::class)->providers() ?? []);
+
+        if (empty($providers)) {
+            return;
+        }
+
+        collect($providers)->each(function ($provider) {
+            $this->register(new $provider($this));
+        });
+    }
+
+    public function register($provider, $force = false)
+    {
+        if (($registered = $this->getProvider($provider)) && ! $force) {
+            return $registered;
+        }
+
+        if (is_string($provider)) {
+            $provider = $this->resolveProvider($provider);
+        }
+
+        if (method_exists($provider, 'register')) {
+            $provider->register();
+        }
+
+        $this->markAsRegistered($provider);
+
+        return $provider;
+    }
+
+    protected function markAsRegistered($provider)
+    {
+        $this->serviceProviders[] = $provider;
+
+        $this->loadedProviders[get_class($provider)] = true;
+    }
+
+    protected function bootProviders()
+    {
+        if ($this->isBooted()) {
+            return;
+        }
+
+        $this->fireAppCallbacks($this->bootingCallbacks);
+
+        array_walk($this->serviceProviders, function ($p) {
+            $this->bootProvider($p);
+        });
+
+        $this->booted = true;
+
+        $this->fireAppCallbacks($this->bootedCallbacks);
+    }
+
+    protected function fireAppCallbacks(array $callbacks)
+    {
+        foreach ($callbacks as $callback) {
+            $callback($this);
+        }
+    }
+
+    protected function bootProvider(ServiceProvider $provider)
+    {
+        $provider->callBootingCallbacks();
+
+        if (method_exists($provider, 'boot')) {
+            $this->call([$provider, 'boot']);
+        }
+
+        $provider->callBootedCallbacks();
+    }
+
+    public function getProvider($provider)
+    {
+        return array_values($this->getProviders($provider))[0] ?? null;
+    }
+
+    public function getProviders($provider)
+    {
+        $name = is_string($provider) ? $provider : get_class($provider);
+
+        return Arr::where($this->serviceProviders, function ($value) use ($name) {
+            return $value instanceof $name;
+        });
+    }
+
+    public function resolveProvider($provider)
+    {
+        return new $provider($this);
     }
 
     protected function bindPathsInContainer(): void
@@ -138,8 +265,24 @@ class Application extends Container
         return $this->isRunningInConsole;
     }
 
+    public function isBooted()
+    {
+        return $this->booted;
+    }
+
     public function getNamespace(): string
     {
         return 'App';
+    }
+
+    protected function registerCoreContainerAliases()
+    {
+        foreach ([
+            'view' => [\Illuminate\View\Factory::class, \Illuminate\Contracts\View\Factory::class],
+        ] as $key => $aliases) {
+            foreach ($aliases as $alias) {
+                $this->alias($key, $alias);
+            }
+        }
     }
 }
