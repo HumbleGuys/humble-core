@@ -2,6 +2,7 @@
 
 namespace HumbleCore\App;
 
+use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
 use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Facade;
@@ -46,6 +47,8 @@ class Application extends Container
         $this->instance('app', $this);
 
         $this->instance(Container::class, $this);
+
+        $this->instance('config', new Repository);
     }
 
     protected function registerBaseServiceProviders(): void

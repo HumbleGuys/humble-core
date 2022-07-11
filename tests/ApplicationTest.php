@@ -31,3 +31,11 @@ test('is running in console', function () {
 
     expect($app->runningInConsole())->toBe(true);
 });
+
+test('config', function () {
+    config(['test' => 'myvalue']);
+
+    expect(config('test'))->toBe('myvalue');
+
+    expect(config('dont_exists'))->toBe(null);
+});
