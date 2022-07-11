@@ -33,7 +33,7 @@ test('is running in console', function () {
 });
 
 test('config', function () {
-    $app = new Application(dirname(__DIR__));
+    new Application(dirname(__DIR__));
 
     config(['test' => 'myvalue']);
 
