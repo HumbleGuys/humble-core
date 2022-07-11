@@ -7,15 +7,15 @@ test('default paths', function () {
 
     expect($app->basePath())->toBe(dirname(__DIR__));
 
-    expect($app->bootstrapPath())->toBe(dirname(__DIR__) . '/bootstrap');
-    
-    expect($app->configPath())->toBe(dirname(__DIR__) . '/config');
+    expect($app->bootstrapPath())->toBe(dirname(__DIR__).'/bootstrap');
 
-    expect($app->publicPath())->toBe(dirname(__DIR__) . '/public');
+    expect($app->configPath())->toBe(dirname(__DIR__).'/config');
 
-    expect($app->storagePath())->toBe(dirname(__DIR__) . '/storage');
+    expect($app->publicPath())->toBe(dirname(__DIR__).'/public');
 
-    expect($app->resourcePath())->toBe(dirname(__DIR__) . '/resources');
+    expect($app->storagePath())->toBe(dirname(__DIR__).'/storage');
+
+    expect($app->resourcePath())->toBe(dirname(__DIR__).'/resources');
 });
 
 test('is running in console', function () {
