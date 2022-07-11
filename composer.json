@@ -24,7 +24,8 @@
         "illuminate/filesystem": "^9.19",
         "illuminate/contracts": "^9.19",
         "illuminate/http": "^9.19",
-        "vlucas/phpdotenv": "^5.4"
+        "vlucas/phpdotenv": "^5.4",
+        "symfony/var-dumper": "^6.1"
     },
     "require-dev": {
         "pestphp/pest": "^1.21",
