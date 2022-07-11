@@ -38,4 +38,11 @@ test('config', function () {
     expect(config('test'))->toBe('myvalue');
 
     expect(config('dont_exists'))->toBe(null);
+    expect(config('test.dont_exists'))->toBe(null);
+
+    config(['test_nested' => [
+        'nested_key' => 'lorem'
+    ]]);
+
+    expect(config('test_nested.nested_key'))->toBe('lorem');
 });
