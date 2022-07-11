@@ -1,1 +1,0 @@
-<div>test</div><?php /**PATH /home/kimla/Sites/humble-core/tests/resources/views/test.blade.php ENDPATH**/ ?>

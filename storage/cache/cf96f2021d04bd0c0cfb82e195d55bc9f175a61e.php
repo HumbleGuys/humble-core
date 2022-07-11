@@ -1,1 +1,0 @@
-<div><?php echo e($name); ?></div><?php /**PATH /home/kimla/Sites/humble-core/tests/resources/views/testView.blade.php ENDPATH**/ ?>
