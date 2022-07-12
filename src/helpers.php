@@ -14,6 +14,36 @@ if (! function_exists('app')) {
     }
 }
 
+if (! function_exists('basePath')) {
+    function basePath(string $string = '') {
+        return app()->basePath($string);
+    }
+}
+
+if (! function_exists('configPath')) {
+    function configPath(string $string = '') {
+        return app()->configPath($string);
+    }
+}
+
+if (! function_exists('publicPath')) {
+    function publicPath(string $string = '') {
+        return app()->publicPath($string);
+    }
+}
+
+if (! function_exists('storagePath')) {
+    function storagePath(string $string = '') {
+        return app()->storagePath($string);
+    }
+}
+
+if (! function_exists('resourcePath')) {
+    function resourcePath(string $string = '') {
+        return app()->resourcePath($string);
+    }
+}
+
 if (! function_exists('config')) {
     /**
      * Get / set the specified configuration value.

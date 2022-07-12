@@ -14,6 +14,18 @@ test('default paths', function () {
     expect($app->storagePath())->toBe(dirname(__DIR__).'/storage');
 
     expect($app->resourcePath())->toBe(dirname(__DIR__).'/resources');
+
+    // Helpers
+
+    expect(basePath())->toBe(dirname(__DIR__));
+
+    expect(configPath())->toBe(dirname(__DIR__).'/config');
+
+    expect(publicPath())->toBe(dirname(__DIR__).'/public');
+
+    expect(storagePath())->toBe(dirname(__DIR__).'/storage');
+
+    expect(resourcePath())->toBe(dirname(__DIR__).'/resources');
 });
 
 test('app helper method returns application', function () {
