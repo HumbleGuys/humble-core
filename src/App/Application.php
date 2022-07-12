@@ -90,7 +90,6 @@ class Application extends Container
     protected function registerBaseServiceProviders(): void
     {
         $this->register(new EventServiceProvider($this));
-        $this->register(new ViewServiceProvider($this));
         //$this->register(new LogServiceProvider($this));
         //$this->register(new RoutingServiceProvider($this));
     }

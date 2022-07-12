@@ -1,12 +1,19 @@
 <?php
 
 use HumbleCore\App\Application;
+use HumbleCore\View\ViewServiceProvider;
 use Illuminate\Support\Facades\Blade;
 
 test('can render blade string', function () {
     $app = new Application(dirname(__DIR__));
 
     config([
+        'app' => [
+            'providers' => [
+                ViewServiceProvider::class,
+            ]
+        ],
+
         'view' => [
             'paths' => [
                 app()->resourcePath(),
@@ -15,6 +22,8 @@ test('can render blade string', function () {
             'compiled' => app()->storagePath('cache'),
         ],
     ]);
+
+    $app->boot();
 
     $res = Blade::render('Hello, {{ $name }}', ['name' => 'Humble Guys']);
 
@@ -25,6 +34,12 @@ test('can render blade view', function () {
     $app = new Application(dirname(__DIR__));
 
     config([
+        'app' => [
+            'providers' => [
+                ViewServiceProvider::class,
+            ]
+        ],
+
         'view' => [
             'paths' => [
                 app()->basePath('tests/resources/views'),
@@ -33,6 +48,8 @@ test('can render blade view', function () {
             'compiled' => app()->storagePath('cache'),
         ],
     ]);
+
+    $app->boot();
 
     expect(view('testView', ['name' => 'Humble Guys']))->toBe('<div>Humble Guys</div>');
 });
