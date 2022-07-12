@@ -14,8 +14,6 @@ use Illuminate\Support\ServiceProvider;
 
 class Application extends Container
 {
-    const VERSION = '9.19.0';
-
     protected string $basePath;
 
     protected $appPath;
