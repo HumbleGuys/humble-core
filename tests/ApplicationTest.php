@@ -7,8 +7,6 @@ test('default paths', function () {
 
     expect($app->basePath())->toBe(dirname(__DIR__));
 
-    expect($app->bootstrapPath())->toBe(dirname(__DIR__).'/bootstrap');
-
     expect($app->configPath())->toBe(dirname(__DIR__).'/config');
 
     expect($app->publicPath())->toBe(dirname(__DIR__).'/public');

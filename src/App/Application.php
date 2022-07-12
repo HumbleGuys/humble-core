@@ -193,7 +193,6 @@ class Application extends Container
         $this->instance('path.public', $this->publicPath());
         $this->instance('path.storage', $this->storagePath());
         $this->instance('path.resources', $this->resourcePath());
-        $this->instance('path.bootstrap', $this->bootstrapPath());
     }
 
     public function path(string $path = ''): string
@@ -206,11 +205,6 @@ class Application extends Container
     public function basePath(string $path = ''): string
     {
         return $this->basePath.($path != '' ? DIRECTORY_SEPARATOR.$path : '');
-    }
-
-    public function bootstrapPath(string $path = ''): string
-    {
-        return $this->basePath.DIRECTORY_SEPARATOR.'bootstrap'.($path != '' ? DIRECTORY_SEPARATOR.$path : '');
     }
 
     public function configPath(string $path = ''): string
