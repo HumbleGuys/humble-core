@@ -2,6 +2,16 @@
 
 use HumbleCore\App\Application;
 
+test('can boot app', function () {
+    $app = new Application(dirname(__DIR__));
+
+    expect($app->isBooted())->toBe(false);
+
+    $app->boot();
+
+    expect($app->isBooted())->toBe(true);
+});
+
 test('default paths', function () {
     $app = new Application(dirname(__DIR__));
 

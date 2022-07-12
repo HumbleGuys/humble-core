@@ -45,6 +45,13 @@ class Application extends Container
         $this->registerCoreContainerAliases();
     }
 
+    public function boot () {
+        $this->registerServiceProviders();
+        $this->bootProviders();
+
+        $this->booted = true;
+    }
+
     public function setBasePath(string $basePath): self
     {
         $this->basePath = rtrim($basePath, '\/');
@@ -140,8 +147,6 @@ class Application extends Container
         array_walk($this->serviceProviders, function ($p) {
             $this->bootProvider($p);
         });
-
-        $this->booted = true;
 
         $this->fireAppCallbacks($this->bootedCallbacks);
     }
