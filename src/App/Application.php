@@ -2,11 +2,11 @@
 
 namespace HumbleCore\App;
 
-use HumbleCore\View\ViewServiceProvider;
 use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
 use Illuminate\Events\EventServiceProvider;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Log\LogServiceProvider;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Facade;
@@ -45,7 +45,8 @@ class Application extends Container
         $this->registerCoreContainerAliases();
     }
 
-    public function boot () {
+    public function boot()
+    {
         $this->registerServiceProviders();
         $this->bootProviders();
 
@@ -90,7 +91,7 @@ class Application extends Container
     protected function registerBaseServiceProviders(): void
     {
         $this->register(new EventServiceProvider($this));
-        //$this->register(new LogServiceProvider($this));
+        $this->register(new LogServiceProvider($this));
         //$this->register(new RoutingServiceProvider($this));
     }
 

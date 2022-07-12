@@ -11,7 +11,7 @@ test('can render blade string', function () {
         'app' => [
             'providers' => [
                 ViewServiceProvider::class,
-            ]
+            ],
         ],
 
         'view' => [
@@ -37,7 +37,7 @@ test('can render blade view', function () {
         'app' => [
             'providers' => [
                 ViewServiceProvider::class,
-            ]
+            ],
         ],
 
         'view' => [
