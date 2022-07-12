@@ -15,31 +15,36 @@ if (! function_exists('app')) {
 }
 
 if (! function_exists('basePath')) {
-    function basePath(string $string = '') {
+    function basePath(string $string = ''): string
+    {
         return app()->basePath($string);
     }
 }
 
 if (! function_exists('configPath')) {
-    function configPath(string $string = '') {
+    function configPath(string $string = ''): string
+    {
         return app()->configPath($string);
     }
 }
 
 if (! function_exists('publicPath')) {
-    function publicPath(string $string = '') {
+    function publicPath(string $string = ''): string
+    {
         return app()->publicPath($string);
     }
 }
 
 if (! function_exists('storagePath')) {
-    function storagePath(string $string = '') {
+    function storagePath(string $string = ''): string
+    {
         return app()->storagePath($string);
     }
 }
 
 if (! function_exists('resourcePath')) {
-    function resourcePath(string $string = '') {
+    function resourcePath(string $string = ''): string
+    {
         return app()->resourcePath($string);
     }
 }
