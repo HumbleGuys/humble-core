@@ -77,3 +77,27 @@ test('can render blade view from folder name if nested', function () {
 
     expect(view('nestedView', ['name' => 'Humble Guys Nested']))->toBe('<div>Humble Guys Nested</div>');
 });
+
+it('throws exception if view dont exists', function () {
+    $app = new Application(dirname(__DIR__));
+
+    config([
+        'app' => [
+            'providers' => [
+                ViewServiceProvider::class,
+            ],
+        ],
+
+        'view' => [
+            'paths' => [
+                app()->resourcePath(),
+            ],
+
+            'compiled' => app()->storagePath('cache'),
+        ],
+    ]);
+
+    $app->boot();
+
+    view('dontExists');
+})->throws(InvalidArgumentException::class);
