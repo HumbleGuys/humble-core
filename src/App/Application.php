@@ -18,7 +18,13 @@ class Application extends Container
 
     protected $appPath;
 
+    protected $configPath;
+
+    protected $publicPath;
+
     protected $storagePath;
+
+    protected $resourcePath;
 
     protected $isRunningInConsole;
 
@@ -212,12 +218,14 @@ class Application extends Container
 
     public function configPath(string $path = ''): string
     {
-        return $this->basePath.DIRECTORY_SEPARATOR.'config'.($path != '' ? DIRECTORY_SEPARATOR.$path : '');
+        return ($this->configPath ?: $this->basePath.DIRECTORY_SEPARATOR.'config')
+                            .($path != '' ? DIRECTORY_SEPARATOR.$path : '');
     }
 
-    public function publicPath(): string
+    public function publicPath(string $path = ''): string
     {
-        return $this->basePath.DIRECTORY_SEPARATOR.'public';
+        return ($this->publicPath ?: $this->basePath.DIRECTORY_SEPARATOR.'public')
+                            .($path != '' ? DIRECTORY_SEPARATOR.$path : '');
     }
 
     public function storagePath(string $path = ''): string
@@ -228,12 +236,34 @@ class Application extends Container
 
     public function resourcePath(string $path = ''): string
     {
-        return $this->basePath.DIRECTORY_SEPARATOR.'resources'.($path != '' ? DIRECTORY_SEPARATOR.$path : '');
+        return ($this->resourcePath ?: $this->basePath.DIRECTORY_SEPARATOR.'resources')
+                            .($path != '' ? DIRECTORY_SEPARATOR.$path : '');
+    }
+
+    public function setConfigPath(string $path): self
+    {
+        $this->configPath = $path;
+
+        return $this;
+    }
+
+    public function setPublicPath(string $path): self
+    {
+        $this->publicPath = $path;
+
+        return $this;
     }
 
     public function setStoragePath(string $path): self
     {
         $this->storagePath = $path;
+
+        return $this;
+    }
+
+    public function setResourcePath(string $path): self
+    {
+        $this->resourcePath = $path;
 
         return $this;
     }

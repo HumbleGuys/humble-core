@@ -38,6 +38,28 @@ test('default paths', function () {
     expect(resourcePath())->toBe(dirname(__DIR__).'/resources');
 });
 
+test('can change paths', function () {
+    $app = new Application(dirname(__DIR__));
+
+    expect($app->basePath())->toBe(dirname(__DIR__));
+    expect($app->configPath())->toBe(dirname(__DIR__).'/config');
+    expect($app->publicPath())->toBe(dirname(__DIR__).'/public');
+    expect($app->storagePath())->toBe(dirname(__DIR__).'/storage');
+    expect($app->resourcePath())->toBe(dirname(__DIR__).'/resources');
+
+    $app->setBasePath(__DIR__.DIRECTORY_SEPARATOR.'my-dir');
+    $app->setConfigPath(basePath('/custom/path/config'));
+    $app->setPublicPath(basePath('/public_html'));
+    $app->setStoragePath(basePath('/custom/path/storage'));
+    $app->setResourcePath(basePath('/custom/path/resources'));
+
+    expect($app->basePath())->toBe(__DIR__.DIRECTORY_SEPARATOR.'my-dir');
+    expect($app->configPath())->toBe(basePath('/custom/path/config'));
+    expect($app->publicPath())->toBe(basePath('/public_html'));
+    expect($app->storagePath())->toBe(basePath('/custom/path/storage'));
+    expect($app->resourcePath())->toBe(basePath('/custom/path/resources'));
+});
+
 test('app helper method returns application', function () {
     $app = new Application(dirname(__DIR__));
 
