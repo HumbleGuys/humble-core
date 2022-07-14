@@ -51,6 +51,13 @@ class Application extends Container
         $this->registerCoreContainerAliases();
     }
 
+    public function loadConfigFiles()
+    {
+        $configLoader = new ConfigLoader;
+
+        $configLoader->loadConfig();
+    }
+
     public function boot()
     {
         $this->registerServiceProviders();
