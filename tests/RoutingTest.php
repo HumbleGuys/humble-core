@@ -36,7 +36,8 @@ test('can register wp routes', function () {
 });
 
 test('can match page route', function () {
-    $route = app()->router->getRoutes()[0];
+    $pageRoute = app()->router->getRoutes()[0];
+    $frontPageRoute = app()->router->getRoutes()[1];
 
     \WP_Mock::userFunction('is_home', [
         'return' => false,
@@ -66,7 +67,8 @@ test('can match page route', function () {
         'return' => true,
     ]);
 
-    expect($route->isMatching())->toBeTrue();
+    expect($pageRoute->isMatching())->toBeTrue();
+    expect($frontPageRoute->isMatching())->toBeFalse();
 });
 
 test('can resolve route with callback handler', function () {
