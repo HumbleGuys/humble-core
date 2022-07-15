@@ -105,7 +105,6 @@ class Application extends Container
     {
         $this->register(new EventServiceProvider($this));
         $this->register(new LogServiceProvider($this));
-        //$this->register(new RoutingServiceProvider($this));
     }
 
     protected function registerServiceProviders()
