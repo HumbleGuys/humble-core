@@ -57,13 +57,13 @@ class Route
     public function resolve()
     {
         if (is_callable($this->handler)) {
-            return call_user_func($this->handler);
+            echo call_user_func($this->handler);
         }
 
         if (is_array($this->handler)) {
             [$class, $method] = $this->handler;
 
-            return (new $class)->{$method}();
+            echo (new $class)->{$method}();
         }
     }
 }
