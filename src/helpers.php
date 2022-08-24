@@ -21,6 +21,13 @@ if (! function_exists('basePath')) {
     }
 }
 
+if (! function_exists('templatePath')) {
+    function templatePath(string $string = ''): string
+    {
+        return app()->templatePath($string);
+    }
+}
+
 if (! function_exists('configPath')) {
     function configPath(string $string = ''): string
     {

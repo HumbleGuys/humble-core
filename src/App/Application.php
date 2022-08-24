@@ -16,6 +16,8 @@ class Application extends Container
 {
     protected string $basePath;
 
+    protected string $templatePath;
+
     protected $appPath;
 
     protected $configPath;
@@ -38,9 +40,13 @@ class Application extends Container
 
     protected $loadedProviders = [];
 
-    public function __construct(?string $basePath = null)
+    public function __construct(?string $basePath, ?string $templatePath = null)
     {
         $this->registerErrorHandler();
+
+        if ($templatePath) {
+            $this->setTemplatePath($templatePath);
+        }
 
         if ($basePath) {
             $this->setBasePath($basePath);
@@ -244,6 +250,11 @@ class Application extends Container
         return $this->basePath.($path != '' ? DIRECTORY_SEPARATOR.$path : '');
     }
 
+    public function templatePath(string $path = ''): string
+    {
+        return $this->templatePath.($path != '' ? DIRECTORY_SEPARATOR.$path : '');
+    }
+
     public function configPath(string $path = ''): string
     {
         return ($this->configPath ?: $this->basePath.DIRECTORY_SEPARATOR.'config')
@@ -266,6 +277,13 @@ class Application extends Container
     {
         return ($this->resourcePath ?: $this->basePath.DIRECTORY_SEPARATOR.'resources')
                             .($path != '' ? DIRECTORY_SEPARATOR.$path : '');
+    }
+
+    public function setTemplatePath(string $path): self
+    {
+        $this->templatePath = $path;
+
+        return $this;
     }
 
     public function setConfigPath(string $path): self
