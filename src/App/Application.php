@@ -40,6 +40,8 @@ class Application extends Container
 
     public function __construct(?string $basePath = null)
     {
+        $this->registerErrorHandler();
+
         if ($basePath) {
             $this->setBasePath($basePath);
         }
@@ -49,6 +51,26 @@ class Application extends Container
         $this->registerBaseBindings();
         $this->registerBaseServiceProviders();
         $this->registerCoreContainerAliases();
+    }
+
+    public function registerErrorHandler()
+    {
+        if ($_ENV['APP_DEBUG'] == 'true') {
+            $whoops = new \Whoops\Run;
+
+            $whoops->prependHandler(new \Whoops\Handler\PrettyPageHandler);
+
+            $whoops->prependHandler(function () {
+
+                // Hides sensible information of env isnt set to local
+                if ($_ENV['APP_ENV'] !== 'local') {
+                    $_ENV = [];
+                    $_SERVER = [];
+                }
+            });
+
+            $whoops->register();
+        }
     }
 
     public function loadConfigFiles()

@@ -28,7 +28,8 @@
         "symfony/var-dumper": "^6.1",
         "illuminate/events": "^9.20",
         "illuminate/log": "^9.20",
-        "roots/wp-password-bcrypt": "^1.1"
+        "roots/wp-password-bcrypt": "^1.1",
+        "filp/whoops": "^2.14"
     },
     "require-dev": {
         "pestphp/pest": "^1.21",
