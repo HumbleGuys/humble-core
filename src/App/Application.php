@@ -2,6 +2,7 @@
 
 namespace HumbleCore\App;
 
+use Illuminate\Cache\CacheManager;
 use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
 use Illuminate\Events\EventServiceProvider;
@@ -127,6 +128,10 @@ class Application extends Container
                 return $this;
             }
         );
+
+        $this->singleton('cache', function ($app) {
+            return new CacheManager($app);
+        });
     }
 
     protected function registerBaseServiceProviders(): void
