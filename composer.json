@@ -27,7 +27,8 @@
         "vlucas/phpdotenv": "^5.4",
         "symfony/var-dumper": "^6.1",
         "illuminate/events": "^9.20",
-        "illuminate/log": "^9.20"
+        "illuminate/log": "^9.20",
+        "roots/wp-password-bcrypt": "^1.1"
     },
     "require-dev": {
         "pestphp/pest": "^1.21",
@@ -39,5 +40,10 @@
         "analyse": "./vendor/bin/phpstan analyse",
         "lint": "./vendor/bin/pint -v",
         "test": "./vendor/bin/pest"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
 }
