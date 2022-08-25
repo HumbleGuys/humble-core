@@ -30,7 +30,8 @@
         "illuminate/log": "^9.26",
         "roots/wp-password-bcrypt": "^1.1",
         "filp/whoops": "^2.14",
-        "illuminate/cache": "^9.26"
+        "illuminate/cache": "^9.26",
+        "illuminate/database": "^9.26"
     },
     "require-dev": {
         "pestphp/pest": "^1.21",
