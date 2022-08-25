@@ -23,17 +23,6 @@ class PostTypesRepository
 
     public function register(PostType $postType): void
     {
-        register_post_type($postType->name, [
-            'name' => $postType->name,
-            'labels' => $postType->labels,
-            'menu_icon' => $postType->icon,
-            'public' => $postType->public,
-            'has_archive' => $postType->has_archive,
-            'show_ui' => $postType->show_ui,
-            'show_in_menu' => $postType->show_in_menu,
-            'supports' => $postType->supports,
-        ]);
-
-        $this->postTypes[] = $postType;
+        $this->postTypes[] = $postType->register();
     }
 }
