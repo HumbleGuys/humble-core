@@ -2,6 +2,8 @@
 
 namespace HumbleCore\PostTypes;
 
+use Illuminate\Support\Collection;
+
 class PostTypesRepository
 {
     protected array $postTypes = [];
@@ -24,5 +26,15 @@ class PostTypesRepository
     public function register(PostType $postType): void
     {
         $this->postTypes[] = $postType->register();
+    }
+
+    public function getPostType(string $name): ?PostType
+    {
+        return $this->getPostTypes()->firstWhere('name', $name);
+    }
+
+    public function getPostTypes(): Collection
+    {
+        return collect($this->postTypes);
     }
 }
