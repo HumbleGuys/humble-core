@@ -132,6 +132,14 @@ class Application extends Container
         $this->singleton('cache', function ($app) {
             return new CacheManager($app);
         });
+
+        $this->singleton(PackageManifest::class, function () {
+            return new PackageManifest(
+                new Filesystem, $this->templatePath(), $this->storagePath('cache/packages.php')
+            );
+        });
+
+        $this->make(PackageManifest::class)->build();
     }
 
     protected function registerBaseServiceProviders(): void
