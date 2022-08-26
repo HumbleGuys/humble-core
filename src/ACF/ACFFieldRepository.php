@@ -30,6 +30,10 @@ class ACFFieldRepository
 
     public function registerField($class): void
     {
+        if (! function_exists('register_extended_field_group')) {
+            return;
+        }
+
         register_extended_field_group([
             'title' => $class::$title,
             'fields' => $class::fields(),
