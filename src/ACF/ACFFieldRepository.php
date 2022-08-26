@@ -4,6 +4,15 @@ namespace HumbleCore\ACF;
 
 class ACFFieldRepository
 {
+    public function registerOptionsPage(array $settings)
+    {
+        if (! function_exists('acf_add_options_page')) {
+            return;
+        }
+
+        acf_add_options_page($settings);
+    }
+
     public function loadFieldsFrom(string $path): void
     {
         collect(app('files')->files($path))->each(function ($file) {
@@ -15,11 +24,11 @@ class ACFFieldRepository
                 ->append("\\{$name}")
                 ->value();
 
-            $this->register(new $class);
+            $this->registerField(new $class);
         });
     }
 
-    public function register($class): void
+    public function registerField($class): void
     {
         register_extended_field_group([
             'title' => $class::$title,
