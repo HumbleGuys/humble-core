@@ -24,11 +24,11 @@ class ACFFieldRepository
                 ->append("\\{$name}")
                 ->value();
 
-            $this->registerField(new $class);
+            $this->registerFieldGroup(new $class);
         });
     }
 
-    public function registerField($class): void
+    public function registerFieldGroup($class): void
     {
         if (! function_exists('register_extended_field_group')) {
             return;
