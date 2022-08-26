@@ -31,7 +31,8 @@
         "roots/wp-password-bcrypt": "^1.1",
         "filp/whoops": "^2.14",
         "illuminate/cache": "^9.26",
-        "illuminate/database": "^9.26"
+        "illuminate/database": "^9.26",
+        "vinkla/extended-acf": "^13.1"
     },
     "require-dev": {
         "pestphp/pest": "^1.21",
