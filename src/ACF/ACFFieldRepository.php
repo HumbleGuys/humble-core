@@ -4,6 +4,8 @@ namespace HumbleCore\ACF;
 
 class ACFFieldRepository
 {
+    public array $fieldGroups = [];
+
     public function registerOptionsPage(array $settings)
     {
         if (! function_exists('acf_add_options_page')) {
@@ -34,14 +36,26 @@ class ACFFieldRepository
             return;
         }
 
+        $this->fieldGroups[] = $class;
+    }
+
+    public function initFieldGroups(): void
+    {
+        foreach ($this->fieldGroups as $fieldGroup) {
+            $this->initFieldGroup($fieldGroup);
+        }
+    }
+
+    public function initFieldGroup($fieldGroup): void
+    {
         register_extended_field_group([
-            'title' => $class::$title,
-            'fields' => $class::fields(),
-            'location' => $class::location(),
+            'title' => $fieldGroup::$title,
+            'fields' => $fieldGroup::fields(),
+            'location' => $fieldGroup::location(),
             'position' => 'normal',
             'style' => 'default',
             'label_placement' => 'top',
-            'menu_order' => $class::$menuOrder ?? 0,
+            'menu_order' => $fieldGroup::$menuOrder ?? 0,
         ]);
     }
 }

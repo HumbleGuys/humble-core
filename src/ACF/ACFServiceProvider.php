@@ -15,4 +15,9 @@ class ACFServiceProvider extends ServiceProvider
             return new ACFFieldRepository;
         });
     }
+
+    public function boot()
+    {
+        app('acf.fields')->initFieldGroups();
+    }
 }

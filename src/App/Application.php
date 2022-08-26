@@ -33,6 +33,8 @@ class Application extends Container
 
     protected $booted = false;
 
+    protected $hasBeenBootstrapped = false;
+
     protected $bootingCallbacks = [];
 
     protected $bootedCallbacks = [];
@@ -58,6 +60,13 @@ class Application extends Container
         $this->registerBaseBindings();
         $this->registerBaseServiceProviders();
         $this->registerCoreContainerAliases();
+
+        $this->hasBeenBootstrapped = true;
+    }
+
+    public function init()
+    {
+        $this->registerServiceProviders();
     }
 
     public function registerErrorHandler()
@@ -89,7 +98,6 @@ class Application extends Container
 
     public function boot()
     {
-        $this->registerServiceProviders();
         $this->bootProviders();
 
         $this->booted = true;
@@ -152,7 +160,7 @@ class Application extends Container
     {
         $providers = config('app.providers') ?? [];
 
-        //$providers = array_merge($providers, $this->make(PackageManifest::class)->providers() ?? []);
+        $providers = array_merge($providers, $this->make(PackageManifest::class)->providers() ?? []);
 
         if (empty($providers)) {
             return;
