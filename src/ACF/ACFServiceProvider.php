@@ -10,6 +10,7 @@ class ACFServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('acf', function () {
+            return new ACF;
         });
 
         $this->app->singleton('acf.fields', function () {
@@ -23,6 +24,5 @@ class ACFServiceProvider extends ServiceProvider
 
     public function boot()
     {
-
     }
 }
