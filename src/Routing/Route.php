@@ -3,6 +3,7 @@
 namespace HumbleCore\Routing;
 
 use Illuminate\Support\Str;
+use UnexpectedValueException;
 
 class Route
 {
@@ -56,14 +57,10 @@ class Route
 
     public function resolve()
     {
-        if (is_callable($this->handler)) {
-            echo call_user_func($this->handler);
+        if (! is_callable($this->handler)) {
+            throw new UnexpectedValueException("Invalid route action for: [{$this->path}].");
         }
 
-        if (is_array($this->handler)) {
-            [$class, $method] = $this->handler;
-
-            echo (new $class)->{$method}();
-        }
+        echo call_user_func($this->handler);
     }
 }
