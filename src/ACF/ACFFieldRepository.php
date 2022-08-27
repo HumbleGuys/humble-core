@@ -2,17 +2,21 @@
 
 namespace HumbleCore\ACF;
 
+use HumbleCore\Support\Facades\Action;
+
 class ACFFieldRepository
 {
     public array $fieldGroups = [];
 
     public function registerOptionsPage(array $settings)
     {
-        if (! function_exists('acf_add_options_page')) {
-            return;
-        }
+        Action::add('acf/init', function () use ($settings) {
+            if (! function_exists('acf_add_options_page')) {
+                return;
+            }
 
-        acf_add_options_page($settings);
+            acf_add_options_page($settings);
+        });
     }
 
     public function loadFieldsFrom(string $path): void
