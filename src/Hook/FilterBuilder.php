@@ -8,4 +8,9 @@ class FilterBuilder extends HookBuilder
     {
         add_filter($name, $this->handleCallback($callback), $priority, $acceptedArguments);
     }
+
+    public function remove(string $name, mixed $callback, int $priority = 10)
+    {
+        remove_filter($name, $this->handleCallback($callback), $priority);
+    }
 }
