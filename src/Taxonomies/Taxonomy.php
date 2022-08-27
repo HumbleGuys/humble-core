@@ -2,6 +2,8 @@
 
 namespace HumbleCore\Taxonomies;
 
+use HumbleCore\Support\Facades\Action;
+
 abstract class Taxonomy
 {
     public string $name;
@@ -33,16 +35,18 @@ abstract class Taxonomy
 
     public function register(): self
     {
-        register_taxonomy($this->name, $this->postTypes, [
-            'labels' => $this->labels,
-            'public' => $this->public,
-            'show_ui' => $this->show_ui,
-            'show_in_menu' => $this->show_in_menu,
-            'rewrite' => $this->rewrite,
-            'show_in_rest' => $this->show_in_rest,
-            'hierarchical' => $this->hierarchical,
-            'show_in_quick_edit' => $this->show_in_quick_edit,
-        ]);
+        Action::add('init', function () {
+            register_taxonomy($this->name, $this->postTypes, [
+                'labels' => $this->labels,
+                'public' => $this->public,
+                'show_ui' => $this->show_ui,
+                'show_in_menu' => $this->show_in_menu,
+                'rewrite' => $this->rewrite,
+                'show_in_rest' => $this->show_in_rest,
+                'hierarchical' => $this->hierarchical,
+                'show_in_quick_edit' => $this->show_in_quick_edit,
+            ]);
+        });
 
         return $this;
     }

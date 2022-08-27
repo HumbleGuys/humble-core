@@ -17,8 +17,4 @@ class RoutingServiceProvider extends ServiceProvider
             return $this->app->router->initWp($template);
         });
     }
-
-    public function boot()
-    {
-    }
 }

@@ -2,6 +2,8 @@
 
 namespace HumbleCore\PostTypes;
 
+use HumbleCore\Support\Facades\Action;
+
 abstract class PostType
 {
     public string $name;
@@ -37,19 +39,21 @@ abstract class PostType
 
     public function register(): self
     {
-        register_post_type($this->name, [
-            'labels' => $this->labels,
-            'menu_icon' => $this->icon,
-            'public' => $this->public,
-            'has_archive' => $this->has_archive,
-            'show_ui' => $this->show_ui,
-            'show_in_menu' => $this->show_in_menu,
-            'supports' => $this->supports,
-            'menu_position' => $this->menu_position,
-            'rewrite' => $this->rewrite,
-            'show_in_rest' => $this->show_in_rest,
-            'hierarchical' => $this->hierarchical,
-        ]);
+        Action::add('init', function () {
+            register_post_type($this->name, [
+                'labels' => $this->labels,
+                'menu_icon' => $this->icon,
+                'public' => $this->public,
+                'has_archive' => $this->has_archive,
+                'show_ui' => $this->show_ui,
+                'show_in_menu' => $this->show_in_menu,
+                'supports' => $this->supports,
+                'menu_position' => $this->menu_position,
+                'rewrite' => $this->rewrite,
+                'show_in_rest' => $this->show_in_rest,
+                'hierarchical' => $this->hierarchical,
+            ]);
+        });
 
         return $this;
     }

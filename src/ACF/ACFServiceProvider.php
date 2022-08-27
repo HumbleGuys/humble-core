@@ -2,6 +2,7 @@
 
 namespace HumbleCore\ACF;
 
+use HumbleCore\Support\Facades\Action;
 use Illuminate\Support\ServiceProvider;
 
 class ACFServiceProvider extends ServiceProvider
@@ -14,10 +15,14 @@ class ACFServiceProvider extends ServiceProvider
         $this->app->singleton('acf.fields', function () {
             return new ACFFieldRepository;
         });
+
+        Action::add('acf/init', function () {
+            app('acf.fields')->initFieldGroups();
+        });
     }
 
     public function boot()
     {
-        app('acf.fields')->initFieldGroups();
+
     }
 }
