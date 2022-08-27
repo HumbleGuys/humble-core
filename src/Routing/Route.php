@@ -57,10 +57,20 @@ class Route
 
     public function resolve()
     {
-        if (! is_callable($this->handler)) {
-            throw new UnexpectedValueException("Invalid route action for: [{$this->path}].");
+        if (is_callable($this->handler)) {
+            return call_user_func($this->handler);
         }
 
-        echo call_user_func($this->handler);
+        if (is_array($this->handler)) {
+            [$class, $method] = $this->handler;
+
+            return (new $class)->{$method}();
+        }
+
+        if (is_string($this->handler) && method_exists($this->handler, '__invoke')) {
+            return (new $this->handler)->__invoke();
+        }
+
+        throw new UnexpectedValueException("Invalid route action for: [{$this->path}].");
     }
 }

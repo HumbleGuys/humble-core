@@ -14,7 +14,7 @@ class RoutingServiceProvider extends ServiceProvider
         });
 
         Filter::add('template_include', function ($template) {
-            return $this->app->router->initWp($template);
+            echo $this->app->router->initWp($template);
         });
     }
 }
