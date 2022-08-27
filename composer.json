@@ -32,7 +32,8 @@
         "filp/whoops": "^2.14",
         "illuminate/cache": "^9.26",
         "illuminate/database": "^9.26",
-        "vinkla/extended-acf": "^13.1"
+        "vinkla/extended-acf": "^13.1",
+        "guzzlehttp/guzzle": "^7.4"
     },
     "require-dev": {
         "pestphp/pest": "^1.21",

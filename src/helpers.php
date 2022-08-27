@@ -14,6 +14,13 @@ if (! function_exists('app')) {
     }
 }
 
+if (! function_exists('asset')) {
+    function asset(?string $path = null): string
+    {
+        return get_template_directory_uri().'/resources/'.$path;
+    }
+}
+
 if (! function_exists('basePath')) {
     function basePath(string $string = ''): string
     {

@@ -2,6 +2,7 @@
 
 namespace HumbleCore\App;
 
+use HumbleCore\Support\Vite;
 use Illuminate\Cache\CacheManager;
 use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
@@ -134,6 +135,13 @@ class Application extends Container
             'Illuminate\Contracts\Foundation\Application',
             function () {
                 return $this;
+            }
+        );
+
+        $this->bind(
+            'Illuminate\Foundation\Vite',
+            function () {
+                return new Vite;
             }
         );
 
@@ -284,7 +292,7 @@ class Application extends Container
 
     public function publicPath(string $path = ''): string
     {
-        return ($this->publicPath ?: $this->basePath.DIRECTORY_SEPARATOR.'public')
+        return ($this->publicPath ?: $this->basePath.DIRECTORY_SEPARATOR.'public_html')
                             .($path != '' ? DIRECTORY_SEPARATOR.$path : '');
     }
 
