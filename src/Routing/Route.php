@@ -18,9 +18,22 @@ class Route
     {
         if ($this->verb === 'WP') {
             return $this->isMatchingWpRoute();
+        } else {
+            return $this->isMatchingApiRoute();
         }
 
         return false;
+    }
+
+    public function isMatchingApiRoute()
+    {
+        $route = request()->server('REQUEST_URI');
+
+        if (! Str::startsWith($route, '/api')) {
+            return false;
+        }
+
+        return str($route)->replace('/api', '')->replaceFirst('/', '')->replaceLast('/', '')->is($this->path);
     }
 
     public function isMatchingWpRoute()

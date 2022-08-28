@@ -16,5 +16,7 @@ class RoutingServiceProvider extends ServiceProvider
         Filter::add('template_include', function ($template) {
             echo $this->app->router->initWp($template);
         });
+
+        (new Api)->setBaseApiUrl();
     }
 }
