@@ -8,6 +8,7 @@ use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
 use Illuminate\Events\EventServiceProvider;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Http\Request;
 use Illuminate\Log\LogServiceProvider;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Env;
@@ -99,6 +100,9 @@ class Application extends Container
 
     public function boot()
     {
+        $request = Request::capture();
+        $this->instance('request', $request);
+
         $this->bootProviders();
 
         $this->booted = true;
