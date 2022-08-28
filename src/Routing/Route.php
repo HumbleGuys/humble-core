@@ -33,6 +33,10 @@ class Route
             return false;
         }
 
+        if (request()->server('REQUEST_METHOD') !== $this->verb) {
+            return false;
+        }
+
         return str($route)->replace('/api', '')->replaceFirst('/', '')->replaceLast('/', '')->is($this->path);
     }
 

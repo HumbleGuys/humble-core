@@ -10,7 +10,22 @@ class Router
 
     public function get(string $path, $handler): void
     {
-        $this->addRoute('get', $path, $handler);
+        $this->addRoute('GET', $path, $handler);
+    }
+
+    public function post(string $path, $handler): void
+    {
+        $this->addRoute('POST', $path, $handler);
+    }
+
+    public function put(string $path, $handler): void
+    {
+        $this->addRoute('PUT', $path, $handler);
+    }
+
+    public function delete(string $path, $handler): void
+    {
+        $this->addRoute('DELETE', $path, $handler);
     }
 
     public function wp(string $path, $handler): void
