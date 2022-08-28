@@ -2,6 +2,8 @@
 
 namespace HumbleCore\Routing;
 
+use UnexpectedValueException;
+
 class Router
 {
     protected array $routes = [];
@@ -37,6 +39,8 @@ class Router
         if ($route) {
             return $route->resolve();
         }
+
+        throw new UnexpectedValueException('No route found.');
 
         return $template;
     }
