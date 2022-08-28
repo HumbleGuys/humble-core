@@ -148,6 +148,17 @@ if (! function_exists('logger')) {
     }
 }
 
+if (! function_exists('menu')) {
+    function menu(?string $name)
+    {
+        if (empty($name)) {
+            return app('menu');
+        }
+
+        return app('menu')->get($name);
+    }
+}
+
 if (! function_exists('request')) {
     /**
      * Get an instance of the current request or an input item from the request.
