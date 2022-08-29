@@ -30,6 +30,7 @@ class ACFServiceProvider extends ServiceProvider
         Filter::add('acf/format_value/type=group', [ACFTransformer::class, 'group'], 100, 1);
         Filter::add('acf/format_value/type=image', [ACFTransformer::class, 'image'], 100, 1);
         Filter::add('acf/format_value/type=link', [ACFTransformer::class, 'link'], 100, 1);
+        Filter::add('acf/format_value/type=relationship', [ACFTransformer::class, 'relationship'], 100, 1);
         Filter::add('acf/format_value/type=repeater', [ACFTransformer::class, 'repeater'], 100, 1);
     }
 

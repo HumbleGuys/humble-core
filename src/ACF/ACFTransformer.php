@@ -105,6 +105,33 @@ class ACFTransformer
         return (object) $link;
     }
 
+    public static function relationship($posts)
+    {
+        if (empty($posts)) {
+            return collect();
+        }
+
+        return collect($posts)->map(function ($post) {
+            if (is_object($post)) {
+                $post = $post->ID;
+            }
+
+            $postType = app('postTypes')->getPostType(get_post_type($post));
+
+            if (empty($postType->model)) {
+                return $post;
+            }
+
+            $model = (new $postType->model)->find($post);
+
+            if (method_exists($model, 'fromRelation')) {
+                $model->fromRelation();
+            }
+
+            return $model->first();
+        });
+    }
+
     public static function repeater($rows)
     {
         if (empty($rows)) {
