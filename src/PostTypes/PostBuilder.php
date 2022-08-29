@@ -3,7 +3,7 @@
 namespace HumbleCore\PostTypes;
 
 use Carbon\Carbon;
-use WP_Lib\Support\Acf;
+use HumbleCore\Support\Facades\ACF;
 
 class PostBuilder
 {
@@ -323,7 +323,7 @@ class PostBuilder
 
     public function get()
     {
-        return $this->model::hydrate($this->getItems());
+        return $this->model::hydrate($this->getItems(), $this->model->getAppends(), $this->model->getMutators());
     }
 
     public function first()
@@ -398,7 +398,7 @@ class PostBuilder
         }
 
         if ($this->acf) {
-            $fields = array_merge($fields, (new Acf)->getFields($this->acf, $this->post));
+            $fields = array_merge($fields, ACF::getFields($this->acf, $this->post));
         }
 
         return $fields;
