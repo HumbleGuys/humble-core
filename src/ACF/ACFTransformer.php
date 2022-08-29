@@ -50,6 +50,17 @@ class ACFTransformer
         return (object) $googleMap;
     }
 
+    public static function gallery($images)
+    {
+        if (empty($images)) {
+            return collect();
+        }
+
+        return collect($images)->map(function ($image) {
+            return self::image($image);
+        });
+    }
+
     public static function group($group)
     {
         if (empty($group)) {
