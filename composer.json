@@ -33,7 +33,8 @@
         "illuminate/cache": "^9.26",
         "illuminate/database": "^9.26",
         "vinkla/extended-acf": "^13.1",
-        "guzzlehttp/guzzle": "^7.4"
+        "guzzlehttp/guzzle": "^7.4",
+        "ramsey/uuid": "^4.4"
     },
     "require-dev": {
         "pestphp/pest": "^1.21",

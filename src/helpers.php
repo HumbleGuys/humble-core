@@ -160,6 +160,26 @@ if (! function_exists('menu')) {
     }
 }
 
+if (! function_exists('svg')) {
+    function svg(string $name, string $class = '')
+    {
+        $svg = file_get_contents(resourcePath('assets/images/'.$name.'.svg'));
+
+        if (empty($class)) {
+            return $svg;
+        }
+
+        $doc = new \DOMDocument;
+        $doc->loadXML($svg);
+
+        foreach ($doc->getElementsByTagName('svg') as $item) {
+            $item->setAttribute('class', $class);
+        }
+
+        return $doc->saveHTML();
+    }
+}
+
 if (! function_exists('response')) {
     /**
      * Return a new response from the application.
