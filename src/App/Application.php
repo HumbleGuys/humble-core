@@ -14,6 +14,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
+use Whoops\Handler\Handler;
 
 class Application extends Container
 {
@@ -85,6 +86,18 @@ class Application extends Container
                     $_ENV = [];
                     $_SERVER = [];
                 }
+
+                return Handler::DONE;
+            });
+
+            $whoops->register();
+        } else {
+            $whoops = new \Whoops\Run;
+
+            $whoops->prependHandler(function ($exception) {
+                logger()->error($exception->getMessage());
+
+                return Handler::DONE;
             });
 
             $whoops->register();
