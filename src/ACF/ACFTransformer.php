@@ -17,6 +17,17 @@ class ACFTransformer
             ->settings(['formatFunction' => 'translatedFormat']);
     }
 
+    public static function flexibleContent($rows)
+    {
+        if (empty($rows)) {
+            return collect();
+        }
+
+        return collect($rows)->map(function ($row) {
+            return new FlexibleContentRow($row);
+        });
+    }
+
     public static function googleMap($googleMap)
     {
         if (empty($googleMap)) {
