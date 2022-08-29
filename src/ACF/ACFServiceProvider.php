@@ -23,6 +23,7 @@ class ACFServiceProvider extends ServiceProvider
         });
 
         Filter::add('acf/format_value/type=date_picker', [ACFTransformer::class, 'date'], 100, 1);
+        Filter::add('acf/format_value/type=file', [ACFTransformer::class, 'file'], 100, 1);
         Filter::add('acf/format_value/type=flexible_content', [ACFTransformer::class, 'flexibleContent'], 100, 1);
         Filter::add('acf/format_value/type=googe_map', [ACFTransformer::class, 'googleMap'], 100, 1);
         Filter::add('acf/format_value/type=group', [ACFTransformer::class, 'group'], 100, 1);

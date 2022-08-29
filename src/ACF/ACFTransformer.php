@@ -28,6 +28,19 @@ class ACFTransformer
         });
     }
 
+    public static function file($file)
+    {
+        if (empty($file)) {
+            return;
+        }
+
+        if (is_string($file)) {
+            return $file;
+        }
+
+        return (object) $file;
+    }
+
     public static function googleMap($googleMap)
     {
         if (empty($googleMap)) {
