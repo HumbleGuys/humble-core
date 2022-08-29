@@ -22,6 +22,8 @@ class ACFServiceProvider extends ServiceProvider
             app('acf.fields')->initFieldGroups();
         });
 
+        Filter::add('acf/format_value/type=googe_map', [ACFTransformer::class, 'googleMap'], 100, 1);
+        Filter::add('acf/format_value/type=group', [ACFTransformer::class, 'group'], 100, 1);
         Filter::add('acf/format_value/type=repeater', [ACFTransformer::class, 'repeater'], 100, 1);
     }
 
