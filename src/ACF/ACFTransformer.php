@@ -2,8 +2,21 @@
 
 namespace HumbleCore\ACF;
 
+use Carbon\Carbon;
+
 class ACFTransformer
 {
+    public static function date($date)
+    {
+        if (empty($date)) {
+            return;
+        }
+
+        return Carbon::parse($date)
+            ->locale(get_locale())
+            ->settings(['formatFunction' => 'translatedFormat']);
+    }
+
     public static function googleMap($googleMap)
     {
         if (empty($googleMap)) {
