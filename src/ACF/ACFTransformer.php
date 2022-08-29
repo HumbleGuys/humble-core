@@ -22,6 +22,19 @@ class ACFTransformer
         return (object) $group;
     }
 
+    public static function link($link)
+    {
+        if (empty($link)) {
+            return;
+        }
+
+        if (is_string($link)) {
+            return $link;
+        }
+
+        return (object) $link;
+    }
+
     public static function repeater($rows)
     {
         if (empty($rows)) {
