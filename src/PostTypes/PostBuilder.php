@@ -19,8 +19,6 @@ class PostBuilder
 
     private $withDate;
 
-    private $relativePermalink = false;
-
     private $acf;
 
     private $taxQuery;
@@ -272,10 +270,9 @@ class PostBuilder
         return $this->model;
     }
 
-    public function withPermalink(bool $relative = false): PostModel
+    public function withPermalink(): PostModel
     {
         $this->permalink = true;
-        $this->relativePermalink = $relative;
 
         return $this->model;
     }
@@ -418,12 +415,6 @@ class PostBuilder
 
     protected function getPermalink(): string
     {
-        $link = get_the_permalink($this->post->ID);
-
-        if ($this->relativePermalink) {
-            $link = wp_make_link_relative($link);
-        }
-
-        return $link;
+        return get_the_permalink($this->post->ID);
     }
 }
