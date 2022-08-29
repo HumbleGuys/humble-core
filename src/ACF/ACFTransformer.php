@@ -59,6 +59,28 @@ class ACFTransformer
         return (object) $group;
     }
 
+    public static function image($image)
+    {
+        if (empty($image)) {
+            return;
+        }
+
+        if (is_string($image)) {
+            return $image;
+        }
+
+        if (empty($image['sizes'])) {
+            return;
+        }
+
+        $sizes = $image['sizes'];
+        unset($sizes['thumbnail']);
+        unset($sizes['thumbnail-width']);
+        unset($sizes['thumbnail-height']);
+
+        return new Image($image['url'], $image['alt'], $image['caption'], $sizes);
+    }
+
     public static function link($link)
     {
         if (empty($link)) {

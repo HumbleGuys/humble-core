@@ -27,6 +27,7 @@ class ACFServiceProvider extends ServiceProvider
         Filter::add('acf/format_value/type=flexible_content', [ACFTransformer::class, 'flexibleContent'], 100, 1);
         Filter::add('acf/format_value/type=googe_map', [ACFTransformer::class, 'googleMap'], 100, 1);
         Filter::add('acf/format_value/type=group', [ACFTransformer::class, 'group'], 100, 1);
+        Filter::add('acf/format_value/type=image', [ACFTransformer::class, 'image'], 100, 1);
         Filter::add('acf/format_value/type=link', [ACFTransformer::class, 'link'], 100, 1);
         Filter::add('acf/format_value/type=repeater', [ACFTransformer::class, 'repeater'], 100, 1);
     }
