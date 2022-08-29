@@ -105,6 +105,31 @@ class ACFTransformer
         return (object) $link;
     }
 
+    public static function postObject($post)
+    {
+        if (empty($post)) {
+            return;
+        }
+
+        if (is_object($post)) {
+            $post = $post->ID;
+        }
+
+        $postType = app('postTypes')->getPostType(get_post_type($post));
+
+        if (empty($postType->model)) {
+            return $post;
+        }
+
+        $model = (new $postType->model)->find($post);
+
+        if (method_exists($model, 'fromRelation')) {
+            $model->fromRelation();
+        }
+
+        return $model->first();
+    }
+
     public static function relationship($posts)
     {
         if (empty($posts)) {
@@ -112,23 +137,7 @@ class ACFTransformer
         }
 
         return collect($posts)->map(function ($post) {
-            if (is_object($post)) {
-                $post = $post->ID;
-            }
-
-            $postType = app('postTypes')->getPostType(get_post_type($post));
-
-            if (empty($postType->model)) {
-                return $post;
-            }
-
-            $model = (new $postType->model)->find($post);
-
-            if (method_exists($model, 'fromRelation')) {
-                $model->fromRelation();
-            }
-
-            return $model->first();
+            return self::postObject($post);
         });
     }
 
