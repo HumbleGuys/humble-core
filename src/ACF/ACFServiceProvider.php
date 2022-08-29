@@ -3,6 +3,7 @@
 namespace HumbleCore\ACF;
 
 use HumbleCore\Support\Facades\Action;
+use HumbleCore\Support\Facades\Filter;
 use Illuminate\Support\ServiceProvider;
 
 class ACFServiceProvider extends ServiceProvider
@@ -20,6 +21,8 @@ class ACFServiceProvider extends ServiceProvider
         Action::add('acf/init', function () {
             app('acf.fields')->initFieldGroups();
         });
+
+        Filter::add('acf/format_value/type=repeater', [ACFTransformer::class, 'repeater'], 100, 1);
     }
 
     public function boot()
