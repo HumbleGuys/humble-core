@@ -94,12 +94,12 @@ class PostSorter
 
             <div>
                 <h1 class="heading">
-                    Sortera
+                    Sort
                 </h1>
 
                 <div class="message updated fade" id="success">
                     <p>
-                        Uppdaterat!
+                        Updated!
                     </p>
                 </div>
 
@@ -113,7 +113,7 @@ class PostSorter
 
 
                 <button class="button-primary" id="savePostsOrder">
-                    Spara
+                    Save
                 </button>
             </div>
 
