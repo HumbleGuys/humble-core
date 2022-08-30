@@ -55,6 +55,10 @@ abstract class PostType
             ]);
         });
 
+        if ($this->sortable) {
+            new PostSorter($this);
+        }
+
         return $this;
     }
 }
