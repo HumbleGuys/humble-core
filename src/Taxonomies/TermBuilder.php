@@ -99,7 +99,7 @@ class TermBuilder
         return $this->model;
     }
 
-    public function showEmpty(): TermModel
+    public function withEmpty(): TermModel
     {
         $this->hideEmpty = false;
 
@@ -232,7 +232,7 @@ class TermBuilder
     protected function sortTermsBySortOrder(array $terms): array
     {
         $terms = array_map(function ($term) {
-            $term->sortorder = getTermSortOrder($term->taxonomy, $term->id);
+            $term->sortorder = get_option($this->name.'_'.$term->id.'_sortorder', 99999999);
 
             return $term;
         }, $terms);

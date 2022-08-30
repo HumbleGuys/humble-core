@@ -48,6 +48,10 @@ abstract class Taxonomy
             ]);
         });
 
+        if ($this->sortable) {
+            new TermSorter($this);
+        }
+
         return $this;
     }
 }
