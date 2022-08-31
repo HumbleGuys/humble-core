@@ -18,6 +18,10 @@ if (! function_exists('app')) {
 if (! function_exists('asset')) {
     function asset(?string $path = null): string
     {
+        if (! function_exists('get_template_directory_uri')) {
+            return '/resources/'.$path; // temp fix
+        }
+
         return get_template_directory_uri().'/resources/'.$path;
     }
 }
