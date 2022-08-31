@@ -49,7 +49,7 @@ trait HasBuilder
             return $instance->newInstance((array) $item, $appends, $mutators);
         }, $items);
 
-        return collect($items);
+        return collect($items)->values();
     }
 
     public function __call($method, $parameters)
