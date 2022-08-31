@@ -84,9 +84,9 @@ class TermBuilder
         return $this->model;
     }
 
-    public function orderByName(string $order = 'asc'): TermModel
+    public function orderByTitle(string $order = 'asc'): TermModel
     {
-        $this->orderBy = 'name';
+        $this->orderBy = 'title';
         $this->order = $order;
 
         return $this->model;
@@ -198,7 +198,7 @@ class TermBuilder
     {
         $item = [
             'id' => $term->term_id,
-            'name' => html_entity_decode($term->name, ENT_QUOTES),
+            'title' => html_entity_decode($term->name, ENT_QUOTES),
             'slug' => $term->slug,
             'taxonomy' => $term->taxonomy,
             'count' => $term->count,
@@ -206,7 +206,7 @@ class TermBuilder
         ];
 
         if ($this->acf) {
-            $item = array_merge($item, (new Acf)->getFields($this->acf, $term));
+            $item = array_merge($item, ACF::getFields($this->acf, $term));
         }
 
         if ($this->permalink) {
@@ -222,8 +222,8 @@ class TermBuilder
             return $this->sortTermsBySortOrder($terms);
         }
 
-        if ($this->orderBy === 'name') {
-            return $this->sortTermsByName($terms);
+        if ($this->orderBy === 'title') {
+            return $this->sortTermsByTitle($terms);
         }
 
         return $terms;
@@ -248,14 +248,14 @@ class TermBuilder
         return $terms;
     }
 
-    protected function sortTermsByName(array $terms): array
+    protected function sortTermsByTitle(array $terms): array
     {
         usort($terms, function ($a, $b) {
             if ($this->order === 'desc') {
-                return strcasecmp($b->name, $a->name);
+                return strcasecmp($b->title, $a->title);
             }
 
-            return strcasecmp($a->name, $b->name);
+            return strcasecmp($a->title, $b->title);
         });
 
         return $terms;

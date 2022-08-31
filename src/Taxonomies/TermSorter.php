@@ -111,7 +111,7 @@ class TermSorter
                 <ul id="sort-terms" class="list sortable">
                     @foreach ($terms as $term)
                         <li data-id="{{ $term->id }}">
-                            {{ $term->name }}
+                            {{ $term->title }}
                         </li>
                     @endforeach
                 </ul>
