@@ -2,11 +2,19 @@
 
 namespace HumbleCore\PostTypes;
 
+use HumbleCore\Support\Facades\Action;
 use Illuminate\Support\Collection;
 
 class PostTypesRepository
 {
     protected array $postTypes = [];
+
+    public function loadMenuIcons()
+    {
+        Action::add('admin_enqueue_scripts', function () {
+            wp_enqueue_style('line-awesome', 'https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css', false, null);
+        });
+    }
 
     public function loadPostTypesFrom(string $path): void
     {

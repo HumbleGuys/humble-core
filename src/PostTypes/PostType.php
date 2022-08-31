@@ -3,6 +3,7 @@
 namespace HumbleCore\PostTypes;
 
 use HumbleCore\Support\Facades\Action;
+use Illuminate\Support\Facades\Blade;
 
 abstract class PostType
 {
@@ -42,7 +43,6 @@ abstract class PostType
         Action::add('init', function () {
             register_post_type($this->name, [
                 'labels' => $this->labels,
-                'menu_icon' => $this->icon,
                 'public' => $this->public,
                 'has_archive' => $this->has_archive,
                 'show_ui' => $this->show_ui,
@@ -54,6 +54,30 @@ abstract class PostType
                 'hierarchical' => $this->hierarchical,
             ]);
         });
+
+        if ($this->icon) {
+            Action::add('admin_head', function () {
+                $css = <<<'blade'
+                    <style type="text/css">
+                        .menu-icon-{{ $postType }} .dashicons-admin-post::before { 
+                            content: '{{ $icon }}'; 
+                            font-family: 'Line Awesome Free' !important;
+                            font-size: 22px !important;
+                            font-weight: 900 !important;
+                            font-style: normal;
+                            font-variant: normal;
+                            text-rendering: auto;
+                            line-height: 1;
+                        }
+                    </style>
+                blade;
+
+                echo Blade::render($css, [
+                    'postType' => $this->name,
+                    'icon' => $this->icon,
+                ]);
+            });
+        }
 
         if ($this->sortable) {
             new PostSorter($this);
