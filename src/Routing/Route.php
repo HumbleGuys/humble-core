@@ -86,6 +86,10 @@ class Route
             return get_the_ID();
         }
 
+        if (is_post_type_archive() && Str::startsWith($this->path, 'archive')) {
+            return;
+        }
+
         if (is_404() || is_search()) {
             return;
         }
