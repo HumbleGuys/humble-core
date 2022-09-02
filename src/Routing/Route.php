@@ -72,20 +72,50 @@ class Route
         return isset($routeChecks[$this->path]) && $routeChecks[$this->path]();
     }
 
-    public function resolve()
+    public function getWpIdForRoute()
+    {
+        if (Str::startsWith($this->path, 'template-') && is_page_template(Str::after($this->path, 'template-'))) {
+            return get_the_ID();
+        }
+
+        if (is_home() && ! is_front_page() && $this->path === 'archive-post') {
+            return get_option('page_for_posts');
+        }
+
+        if (is_singular() && Str::startsWith($this->path, 'single')) {
+            return get_the_ID();
+        }
+
+        if (is_404() || is_search()) {
+            return;
+        }
+
+        if (is_front_page() || is_page()) {
+            return get_the_ID();
+        }
+    }
+
+    public function resolveWpRoute()
+    {
+        $id = $this->getWpIdForRoute();
+
+        return $this->resolve($id);
+    }
+
+    public function resolve($arg = null)
     {
         if (is_callable($this->handler)) {
-            return call_user_func($this->handler);
+            return call_user_func($this->handler, $arg);
         }
 
         if (is_array($this->handler)) {
             [$class, $method] = $this->handler;
 
-            return (new $class)->{$method}();
+            return (new $class)->{$method}($arg);
         }
 
         if (is_string($this->handler) && method_exists($this->handler, '__invoke')) {
-            return (new $this->handler)->__invoke();
+            return (new $this->handler)->__invoke($arg);
         }
 
         throw new UnexpectedValueException("Invalid route action for: [{$this->path}].");

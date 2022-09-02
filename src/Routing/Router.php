@@ -78,7 +78,7 @@ class Router
         });
 
         if ($route) {
-            return $route->resolve();
+            return $route->resolveWpRoute();
         }
 
         throw new UnexpectedValueException('No route found.');
