@@ -248,7 +248,7 @@ if (! function_exists('validator')) {
 
 if (! function_exists('validate')) {
     /**
-     * Create a new Validator instance.
+     * Validates data
      *
      * @param  array  $data
      * @param  array  $rules
