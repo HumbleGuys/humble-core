@@ -246,6 +246,33 @@ if (! function_exists('validator')) {
     }
 }
 
+if (! function_exists('validate')) {
+    /**
+     * Create a new Validator instance.
+     *
+     * @param  array  $data
+     * @param  array  $rules
+     * @param  array  $messages
+     * @param  array  $customAttributes
+     */
+    function validate(array $data = [], array $rules = [], array $messages = [], array $customAttributes = [])
+    {
+        $factory = app(ValidationFactory::class);
+
+        $validator = $factory->make($data, $rules, $messages, $customAttributes);
+
+        if ($validator->fails()) {
+            response([
+                'message' => 'validation_error',
+            ], 400)->send();
+
+            exit();
+        }
+
+        return $data;
+    }
+}
+
 if (! function_exists('view')) {
     function view(?string $view = null, array $data = [], array $mergeData = []): string
     {
