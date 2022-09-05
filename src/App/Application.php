@@ -14,6 +14,8 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Translation\TranslationServiceProvider;
+use Illuminate\Validation\ValidationServiceProvider;
 use Whoops\Handler\Handler;
 
 class Application extends Container
@@ -31,6 +33,8 @@ class Application extends Container
     protected $storagePath;
 
     protected $resourcePath;
+
+    protected $langPath;
 
     protected $isRunningInConsole;
 
@@ -80,7 +84,6 @@ class Application extends Container
             $whoops->prependHandler(new \Whoops\Handler\PrettyPageHandler);
 
             $whoops->prependHandler(function () {
-
                 // Hides sensible information of env isnt set to local
                 if ($_ENV['APP_ENV'] !== 'local') {
                     $_ENV = [];
@@ -179,6 +182,8 @@ class Application extends Container
     {
         $this->register(new EventServiceProvider($this));
         $this->register(new LogServiceProvider($this));
+        $this->register(new ValidationServiceProvider($this));
+        $this->register(new TranslationServiceProvider($this));
     }
 
     protected function registerServiceProviders()
@@ -282,6 +287,7 @@ class Application extends Container
         $this->instance('path.public', $this->publicPath());
         $this->instance('path.storage', $this->storagePath());
         $this->instance('path.resources', $this->resourcePath());
+        $this->instance('path.lang', $this->langPath());
     }
 
     public function path(string $path = ''): string
@@ -325,6 +331,12 @@ class Application extends Container
                             .($path != '' ? DIRECTORY_SEPARATOR.$path : '');
     }
 
+    public function langPath(string $path = ''): string
+    {
+        return ($this->langPath ?: $this->basePath.DIRECTORY_SEPARATOR.'lang')
+                            .($path != '' ? DIRECTORY_SEPARATOR.$path : '');
+    }
+
     public function setTemplatePath(string $path): self
     {
         $this->templatePath = $path;
@@ -356,6 +368,13 @@ class Application extends Container
     public function setResourcePath(string $path): self
     {
         $this->resourcePath = $path;
+
+        return $this;
+    }
+
+    public function setLangPath(string $path): self
+    {
+        $this->langPath = $path;
 
         return $this;
     }
@@ -397,6 +416,7 @@ class Application extends Container
     protected function registerCoreContainerAliases()
     {
         foreach ([
+            'validator' => [\Illuminate\Validation\Factory::class, \Illuminate\Contracts\Validation\Factory::class],
             'view' => [\Illuminate\View\Factory::class, \Illuminate\Contracts\View\Factory::class],
         ] as $key => $aliases) {
             foreach ($aliases as $alias) {
