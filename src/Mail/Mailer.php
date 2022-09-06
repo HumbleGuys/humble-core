@@ -2,6 +2,8 @@
 
 namespace HumbleCore\Mail;
 
+use HumbleCore\Support\Facades\Action;
+
 class Mailer
 {
     protected $headers;
@@ -35,11 +37,11 @@ class Mailer
 
     private function checkForMailgun(): void
     {
-        if (config('mail.mailer') !== 'mailgun' || empty(config('mail.mailgun'))) {
+        if (config('mail.mailer') !== 'mailgun') {
             return;
         }
 
-        add_action('phpmailer_init', function ($phpmailer) {
+        Action::add('phpmailer_init', function ($phpmailer) {
             $phpmailer->isSMTP();
             $phpmailer->Host = config('mail.mailgun.host');
             $phpmailer->SMTPAuth = true;
@@ -51,17 +53,17 @@ class Mailer
 
     private function checkForMailTrap(): void
     {
-        if (config('mail.mailer') !== 'mailtrap' || ! env('MAILTRAP_USERNAME') || ! env('MAILTRAP_PASSWORD')) {
+        if (config('mail.mailer') !== 'mailtrap') {
             return;
         }
 
-        add_action('phpmailer_init', function ($phpmailer) {
+        Action::add('phpmailer_init', function ($phpmailer) {
             $phpmailer->isSMTP();
-            $phpmailer->Host = 'smtp.mailtrap.io';
+            $phpmailer->Host = config('mail.mailtrap.host');
             $phpmailer->SMTPAuth = true;
-            $phpmailer->Port = 2525;
-            $phpmailer->Username = env('MAILTRAP_USERNAME');
-            $phpmailer->Password = env('MAILTRAP_PASSWORD');
+            $phpmailer->Port = config('mail.mailtrap.port');
+            $phpmailer->Username = config('mail.mailtrap.username');
+            $phpmailer->Password = config('mail.mailtrap.password');
         });
     }
 

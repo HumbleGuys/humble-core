@@ -6,53 +6,32 @@ class MailMessage extends Mailer
 {
     public $rows = [];
 
-    public $attachments = [];
-
-    public function greeting($greeting)
+    public function heading($heading)
     {
         $this->rows[] = [
-            'type' => 'greeting',
-            'value' => $greeting,
+            'type' => 'heading',
+            'value' => $heading,
         ];
 
         return $this;
     }
 
-    public function line($line)
+    public function text($content)
     {
         $this->rows[] = [
-            'type' => 'line',
-            'value' => $line,
+            'type' => 'content',
+            'value' => $content,
         ];
 
         return $this;
     }
 
-    public function lines($lines)
-    {
-        $this->rows[] = [
-            'type' => 'lines',
-            'lines' => $lines,
-        ];
-
-        return $this;
-    }
-
-    public function panel($panel)
-    {
-        $this->rows[] = [
-            'type' => 'panel',
-            'value' => $panel,
-        ];
-
-        return $this;
-    }
-
-    public function button($button)
+    public function button($label, $url)
     {
         $this->rows[] = [
             'type' => 'button',
-            'value' => $button,
+            'label' => $label,
+            'url' => $url,
         ];
 
         return $this;
