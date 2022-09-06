@@ -3,9 +3,12 @@
 namespace HumbleCore\Mail;
 
 use HumbleCore\Support\Facades\Action;
+use Illuminate\Support\Traits\Conditionable;
 
 class Mailer
 {
+    use Conditionable;
+
     protected $headers;
 
     protected $to;
