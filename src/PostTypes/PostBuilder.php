@@ -120,13 +120,18 @@ class PostBuilder
 
     public function whereInTerms(Collection $terms): PostModel
     {
+        $taxQuery = $terms->map(function ($term) {
+            return [
+                'taxonomy' => $term->taxonomy,
+                'field' => 'term_id',
+                'terms' => $term->id,
+            ];
+        })->all();
+
         $this->taxQuery = [
             [
-                [
-                    'taxonomy' => $terms->first()->taxonomy,
-                    'field' => 'term_id',
-                    'terms' => $terms->pluck('id'),
-                ],
+                'relation' => 'OR',
+                ...$taxQuery,
             ],
         ];
 
