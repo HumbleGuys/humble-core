@@ -4,6 +4,8 @@ namespace HumbleCore\PostTypes;
 
 use Carbon\Carbon;
 use HumbleCore\Support\Facades\ACF;
+use HumbleCore\Taxonomies\TermModel;
+use Illuminate\Support\Collection;
 
 class PostBuilder
 {
@@ -33,10 +35,7 @@ class PostBuilder
 
     private $postName;
 
-    private $metaQuery = [
-        'relation' => 'AND',
-        'metaFilters' => [],
-    ];
+    private $taxQuery;
 
     protected $postType;
 
@@ -100,6 +99,36 @@ class PostBuilder
     public function search(string $query): PostModel
     {
         $this->search = urldecode($query);
+
+        return $this->model;
+    }
+
+    public function whereHasTerm(TermModel $term): PostModel
+    {
+        $this->taxQuery = [
+            [
+                [
+                    'taxonomy' => $term->taxonomy,
+                    'field' => 'term_id',
+                    'terms' => $term->id,
+                ],
+            ],
+        ];
+
+        return $this->model;
+    }
+
+    public function whereInTerms(Collection $terms): PostModel
+    {
+        $this->taxQuery = [
+            [
+                [
+                    'taxonomy' => $terms->first()->taxonomy,
+                    'field' => 'term_id',
+                    'terms' => $terms->pluck('id'),
+                ],
+            ],
+        ];
 
         return $this->model;
     }
@@ -247,6 +276,7 @@ class PostBuilder
             'post__in' => $postIn,
             'orderby' => $postIn ? 'post__in' : $this->orderBy,
             'order' => $this->order,
+            'tax_query' => $this->taxQuery,
             's' => $this->search,
             'suppress_filters' => false,
         ]);
