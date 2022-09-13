@@ -16,8 +16,19 @@ class MenuBuilder
             return collect();
         }
 
-        return collect(wp_get_nav_menu_items($locations[$this->name]))->map(function ($item) {
-            return new MenuItem($item);
-        });
+        $items = collect(wp_get_nav_menu_items($locations[$this->name]));
+
+        $childs = collect(wp_get_nav_menu_items($locations[$this->name]))
+            ->filter(function ($item) {
+                return $item->menu_item_parent != 0;
+            });
+
+        return $items
+            ->filter(function ($item) {
+                return $item->menu_item_parent == 0;
+            })
+            ->map(function ($item) use ($childs) {
+                return new MenuItem($item, $childs);
+            });
     }
 }
