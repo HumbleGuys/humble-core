@@ -25,6 +25,10 @@ class MenuItem
         $this->classes = implode(' ', $item->classes);
 
         $this->setChilds($childs);
+
+        if ($this->hasActiveChild()) {
+            $this->classes .= ' isActive';
+        }
     }
 
     protected function setChilds($childs)
@@ -33,6 +37,13 @@ class MenuItem
             return $child->menu_item_parent == $this->id;
         })->map(function ($child) use ($childs) {
             return new MenuItem($child, $childs);
+        });
+    }
+
+    protected function hasActiveChild()
+    {
+        return $this->childs->first(function ($child) {
+            return str_contains($child->classes, 'isActive');
         });
     }
 }

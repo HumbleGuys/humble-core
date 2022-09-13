@@ -16,12 +16,19 @@ class MenuBuilder
             return collect();
         }
 
-        $items = collect(wp_get_nav_menu_items($locations[$this->name]));
+        $menuItems = collect(wp_get_nav_menu_items($locations[$this->name]));
 
-        $childs = collect(wp_get_nav_menu_items($locations[$this->name]))
-            ->filter(function ($item) {
-                return $item->menu_item_parent != 0;
-            });
+        $activeChecker = new ActiveChecker($menuItems);
+
+        $items = $menuItems->each(function ($menuItem) use ($activeChecker) {
+            if ($activeChecker->isActive($menuItem)) {
+                $menuItem->classes[] = 'isActive';
+            }
+        });
+
+        $childs = $items->filter(function ($item) {
+            return $item->menu_item_parent != 0;
+        });
 
         return $items
             ->filter(function ($item) {
