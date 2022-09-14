@@ -14,7 +14,7 @@ abstract class PostType
         'singular_name' => '',
     ];
 
-    public string $icon;
+    public ?string $icon = null;
 
     public bool $public = true;
 
