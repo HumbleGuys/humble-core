@@ -87,7 +87,7 @@ class Route
         }
 
         if (is_post_type_archive() && Str::startsWith($this->path, 'archive')) {
-            return;
+            return app('postTypes')->getArchiveIdFromPostType(Str::after($this->path, 'archive-'));
         }
 
         if (is_404() || is_search()) {

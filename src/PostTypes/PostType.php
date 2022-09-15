@@ -38,9 +38,13 @@ abstract class PostType
 
     public bool $sortable = false;
 
+    public $archivePage;
+
     public function register(): self
     {
         Action::add('init', function () {
+            $this->setRewrite();
+
             register_post_type($this->name, [
                 'labels' => $this->labels,
                 'public' => $this->public,
@@ -55,28 +59,12 @@ abstract class PostType
             ]);
         });
 
-        if ($this->icon) {
-            Action::add('admin_head', function () {
-                $css = <<<'blade'
-                    <style type="text/css">
-                        .menu-icon-{{ $postType }} .dashicons-admin-post::before { 
-                            content: '{{ $icon }}'; 
-                            font-family: 'Line Awesome Free' !important;
-                            font-size: 22px !important;
-                            font-weight: 900 !important;
-                            font-style: normal;
-                            font-variant: normal;
-                            text-rendering: auto;
-                            line-height: 1;
-                        }
-                    </style>
-                blade;
+        if (method_exists($this, 'archivePage')) {
+            new ACFCustomArchiveLocation($this);
+        }
 
-                echo Blade::render($css, [
-                    'postType' => $this->name,
-                    'icon' => $this->icon,
-                ]);
-            });
+        if ($this->icon) {
+            $this->setIcon();
         }
 
         if ($this->sortable) {
@@ -84,5 +72,54 @@ abstract class PostType
         }
 
         return $this;
+    }
+
+    protected function setRewrite()
+    {
+        if (method_exists($this, 'archivePage')) {
+            $page = $this->archivePage();
+
+            if (! empty($page)) {
+                $this->archivePage = $page;
+
+                $archiveRoute = get_the_permalink($page);
+
+                $archiveRoute = trim(str_replace(home_url(), '', $archiveRoute), '/');
+
+                $this->rewrite = [
+                    'slug' => $archiveRoute,
+                    'with_front' => false,
+                ];
+
+                $this->has_archive = true;
+            }
+
+            flush_rewrite_rules(false);
+        }
+    }
+
+    protected function setIcon()
+    {
+        Action::add('admin_head', function () {
+            $css = <<<'blade'
+                <style type="text/css">
+                    .menu-icon-{{ $postType }} .dashicons-admin-post::before { 
+                        content: '{{ $icon }}'; 
+                        font-family: 'Line Awesome Free' !important;
+                        font-size: 22px !important;
+                        font-weight: 900 !important;
+                        font-style: normal;
+                        font-variant: normal;
+                        text-rendering: auto;
+                        line-height: 1;
+                    }
+                </style>
+            blade;
+
+            echo Blade::render($css, [
+                'postType' => $this->name,
+                'icon' => $this->icon,
+            ]);
+        });
     }
 }
