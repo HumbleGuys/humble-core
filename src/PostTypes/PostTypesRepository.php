@@ -45,4 +45,18 @@ class PostTypesRepository
     {
         return collect($this->postTypes);
     }
+
+    public function getArchiveIdFromPostType($postTypeName)
+    {
+        return $this->getPostTypes()->first(function ($postType) use ($postTypeName) {
+            return $postType->name === $postTypeName;
+        })?->archivePage;
+    }
+
+    public function getPostTypeFromArchivePageId($pageId)
+    {
+        return $this->getPostTypes()->first(function ($postType) use ($pageId) {
+            return $postType->archivePage === $pageId;
+        });
+    }
 }
