@@ -90,6 +90,10 @@ class Route
             return app('postTypes')->getArchiveIdFromPostType(Str::after($this->path, 'archive-'));
         }
 
+        if (is_tax() && Str::startsWith($this->path, 'taxonomy')) {
+            return get_queried_object_id();
+        }
+
         if (is_404() || is_search()) {
             return;
         }
