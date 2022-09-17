@@ -15,7 +15,7 @@ class ActiveChecker
         $this->currentObject = get_queried_object();
 
         $this->currentItems = $menuItems->filter(function ($item) {
-            return $item->object_id == ! empty($this->currentObject->ID) ? $this->currentObject->ID : null;
+            return $item->object_id == (isset($this->currentObject->ID) ? $this->currentObject->ID : null);
         })->pluck('ID')->all();
 
         $this->postArchiveUrl = get_the_permalink(get_option('page_for_posts'));
