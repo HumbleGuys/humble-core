@@ -29,6 +29,8 @@ class Route
     {
         $route = request()->server('REQUEST_URI');
 
+        $route = str($route)->beforeLast('?');
+
         if (! Str::startsWith($route, '/api')) {
             return false;
         }
