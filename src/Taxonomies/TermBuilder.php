@@ -24,6 +24,8 @@ class TermBuilder
 
     protected $permalink;
 
+    protected $search;
+
     protected $model;
 
     public function __construct($model)
@@ -50,6 +52,13 @@ class TermBuilder
     public function name(string $name): TermModel
     {
         $this->name = $name;
+
+        return $this->model;
+    }
+
+    public function search(string $query): TermModel
+    {
+        $this->search = urldecode($query);
 
         return $this->model;
     }
@@ -191,6 +200,7 @@ class TermBuilder
         return get_terms([
             'taxonomy' => $this->name,
             'hide_empty' => $this->hideEmpty,
+            'search' => $this->search,
         ]);
     }
 
