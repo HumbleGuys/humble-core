@@ -138,7 +138,7 @@ class TermBuilder
         $terms = $this->getTerms();
 
         if (! $terms) {
-            return [];
+            return collect();
         }
 
         $terms = array_map(function ($term) {
@@ -157,7 +157,7 @@ class TermBuilder
 
         foreach ($terms as $key => $term) {
             if ($term->parent === 0) {
-                $term->childs = $this->findChilds($terms, $term->id);
+                $term->childs = $this->model::hydrate($this->findChilds($terms, $term->id), $this->model->getAppends(), $this->model->getMutators());
                 $out[] = $term;
             }
         }
