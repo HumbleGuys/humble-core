@@ -138,7 +138,7 @@ class TermBuilder
         $terms = $this->getTerms();
 
         if (! $terms) {
-            return collect();
+            return;
         }
 
         $terms = array_map(function ($term) {
@@ -167,7 +167,13 @@ class TermBuilder
 
     public function get()
     {
-        return $this->model::hydrate($this->getItems(), $this->model->getAppends(), $this->model->getMutators());
+        $items = $this->getItems();
+
+        if (empty($items)) {
+            return collect();
+        }
+
+        return $this->model::hydrate($items, $this->model->getAppends(), $this->model->getMutators());
     }
 
     public function first()
