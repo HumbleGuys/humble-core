@@ -424,4 +424,16 @@ class Application extends Container
             }
         }
     }
+
+    public function getLocale()
+    {
+        if (function_exists('get_bloginfo')) {
+            return get_bloginfo('language');
+        }
+    }
+
+    public function getFallbackLocale()
+    {
+        return 'en';
+    }
 }
