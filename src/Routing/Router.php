@@ -8,39 +8,48 @@ class Router
 {
     protected array $routes = [];
 
-    public function get(string $path, $handler): void
+    public function get(string $path, $handler): Route
     {
-        $this->addRoute('GET', $path, $handler);
+        return $this->addRoute('GET', $path, $handler);
     }
 
-    public function post(string $path, $handler): void
+    public function post(string $path, $handler): Route
     {
-        $this->addRoute('POST', $path, $handler);
+        return $this->addRoute('POST', $path, $handler);
     }
 
-    public function put(string $path, $handler): void
+    public function put(string $path, $handler): Route
     {
-        $this->addRoute('PUT', $path, $handler);
+        return $this->addRoute('PUT', $path, $handler);
     }
 
-    public function delete(string $path, $handler): void
+    public function delete(string $path, $handler): Route
     {
-        $this->addRoute('DELETE', $path, $handler);
+        return $this->addRoute('DELETE', $path, $handler);
     }
 
-    public function wp(string $path, $handler): void
+    public function wp(string $path, $handler): Route
     {
-        $this->addRoute('WP', $path, $handler);
+        return $this->addRoute('WP', $path, $handler);
     }
 
     public function addRoute($verb, $path, $handler)
     {
-        $this->routes[] = new Route($verb, $path, $handler);
+        $route = new Route($verb, $path, $handler);
+
+        $this->routes[] = $route;
+
+        return $route;
     }
 
     public function getRoutes(): array
     {
         return $this->routes;
+    }
+
+    public function getRoute(string $name): Route
+    {
+        return collect($this->routes)->firstWhere('name', $name);
     }
 
     public function loadRoutesFrom($path)

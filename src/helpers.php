@@ -224,6 +224,22 @@ if (! function_exists('request')) {
     }
 }
 
+if (! function_exists('route')) {
+    function route(string $name, mixed $key = null): string
+    {
+        $route = app('router')->getRoute($name);
+
+        return $route->url($key);
+    }
+}
+
+if (! function_exists('to_route')) {
+    function to_route(string $name, mixed $key = null): void
+    {
+        wp_safe_redirect(route($name, $key));
+    }
+}
+
 if (! function_exists('validator')) {
     /**
      * Create a new Validator instance.

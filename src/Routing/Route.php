@@ -10,7 +10,8 @@ class Route
     public function __construct(
         public $verb,
         public $path,
-        public $handler
+        public $handler,
+        public $name = null
     ) {
     }
 
@@ -129,5 +130,55 @@ class Route
         }
 
         throw new UnexpectedValueException("Invalid route action for: [{$this->path}].");
+    }
+
+    public function name(string $name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function url($key)
+    {
+        if ($this->verb !== 'WP') {
+            $baseUrl = get_home_url();
+
+            return "{$baseUrl}/api/{$this->path}";
+        }
+
+        if ($this->path === 'front-page') {
+            return get_the_permalink(get_option('page_on_front'));
+        }
+
+        if ($this->path === 'page' || Str::startsWith($this->path, 'template-')) {
+            throw_if(empty($key), 'Key paramenter is missing');
+
+            return get_the_permalink($key);
+        }
+
+        if (Str::startsWith($this->path, 'single')) {
+            throw_if(empty($key), 'Key paramenter is missing');
+
+            return get_the_permalink($key);
+        }
+
+        if ($this->path === 'archive-post') {
+            return get_the_permalink(get_option('page_for_posts'));
+        }
+
+        if (Str::startsWith($this->path, 'archive')) {
+            $id = app('postTypes')->getArchiveIdFromPostType(Str::after($this->path, 'archive-'));
+
+            return get_the_permalink($id);
+        }
+
+        if (Str::startsWith($this->path, 'taxonomy')) {
+            throw_if(empty($key), 'Key paramenter is missing');
+
+            return get_term_link($key, Str::after($this->path, 'taxonomy-'));
+        }
+
+        throw('Unkown route type');
     }
 }
