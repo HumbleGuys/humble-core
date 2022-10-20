@@ -436,4 +436,10 @@ class Application extends Container
     {
         return 'en';
     }
+
+    public function terminating()
+    {
+        // This function is needed
+        // Add logic later if needed
+    }
 }
