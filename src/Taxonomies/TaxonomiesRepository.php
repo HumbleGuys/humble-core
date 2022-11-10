@@ -37,4 +37,25 @@ class TaxonomiesRepository
     {
         return collect($this->taxnomies);
     }
+
+    public function addSortToPostCategories($categoriesModel)
+    {
+        $categoriesTax = new class extends Taxonomy
+        {
+            public string $name = 'category';
+
+            public array $postTypes = ['post'];
+
+            public array $labels = [
+                'name' => 'Kategorier',
+                'singular_name' => 'Kategori',
+            ];
+
+            public bool $sortable = true;
+        };
+
+        $categoriesTax->model = $categoriesModel;
+
+        new TermSorter($categoriesTax);
+    }
 }
