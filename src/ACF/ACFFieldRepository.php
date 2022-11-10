@@ -62,4 +62,11 @@ class ACFFieldRepository
             'menu_order' => $fieldGroup::$menuOrder ?? 0,
         ]);
     }
+
+    public function registerGoogleMapsKey(string $key): void
+    {
+        Action::add('acf/init', function () use ($key) {
+            acf_update_setting('google_api_key', $key);
+        });
+    }
 }
