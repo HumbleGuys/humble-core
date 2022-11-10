@@ -177,6 +177,10 @@ class Application extends Container
 
         $this->make(PackageManifest::class)->build();
 
+        $this->singleton('admin', function () {
+            return new Admin;
+        });
+
         $this->singleton('templates', function () {
             return new Templates;
         });
