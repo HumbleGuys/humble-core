@@ -176,6 +176,10 @@ class Application extends Container
         });
 
         $this->make(PackageManifest::class)->build();
+
+        $this->singleton('templates', function () {
+            return new Templates;
+        });
     }
 
     protected function registerBaseServiceProviders(): void
