@@ -56,6 +56,10 @@ class Mailer
 
     private function checkForMailTrap(): void
     {
+        if (app()->isProduction()) {
+            return;
+        }
+
         if (config('mail.mailer') !== 'mailtrap') {
             return;
         }

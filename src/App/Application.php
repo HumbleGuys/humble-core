@@ -387,9 +387,14 @@ class Application extends Container
         return $this;
     }
 
+    public function isProduction(): bool
+    {
+        return $_ENV['APP_ENV'] === 'production';
+    }
+
     public function isLocal(): bool
     {
-        return $this['env'] === 'local';
+        return $_ENV['APP_ENV'] === 'local';
     }
 
     public function runningUnitTests(): bool
