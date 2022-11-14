@@ -22,7 +22,7 @@ abstract class PostType
 
     public ?bool $show_ui = null;
 
-    public ?bool $show_in_menu = null;
+    public $show_in_menu = null;
 
     public array $supports = ['title'];
 
