@@ -4,6 +4,7 @@ use HumbleCore\App\Application;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 
 if (! function_exists('app')) {
     function app(?string $abstract = null, array $parameters = [])
@@ -225,18 +226,24 @@ if (! function_exists('request')) {
 }
 
 if (! function_exists('route')) {
-    function route(string $name, mixed $key = null): string
+    function route(string $name, mixed $key = null, ?array $query = null): string
     {
         $route = app('router')->getRoute($name);
 
-        return $route->url($key);
+        $url = $route->url($key);
+
+        if (! empty($query)) {
+            $url .= '?'.Arr::query($query);
+        }
+
+        return $url;
     }
 }
 
 if (! function_exists('to_route')) {
-    function to_route(string $name, mixed $key = null): void
+    function to_route(string $name, mixed $key = null, ?array $query = null): void
     {
-        wp_safe_redirect(route($name, $key));
+        wp_safe_redirect(route($name, $key, $query));
     }
 }
 
