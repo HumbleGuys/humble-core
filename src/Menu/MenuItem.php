@@ -25,7 +25,7 @@ class MenuItem
         $this->target = $item->target;
         $this->title = $item->title;
         $this->classes = implode(' ', $item->classes);
-        $this->fields = app('acf')->getFields(null, $item);
+        $this->fields = (object) app('acf')->getFields(null, $item);
 
         $this->setChilds($childs);
 
