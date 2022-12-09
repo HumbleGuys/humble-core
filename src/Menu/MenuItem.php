@@ -16,6 +16,8 @@ class MenuItem
 
     public $childs;
 
+    public $fields;
+
     public function __construct($item, $childs)
     {
         $this->id = $item->ID;
@@ -23,6 +25,7 @@ class MenuItem
         $this->target = $item->target;
         $this->title = $item->title;
         $this->classes = implode(' ', $item->classes);
+        $this->fields = app('acf')->getFields(null, $item);
 
         $this->setChilds($childs);
 
