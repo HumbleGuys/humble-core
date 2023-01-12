@@ -71,6 +71,10 @@ abstract class PostType
             new PostSorter($this);
         }
 
+        if (method_exists($this, 'searchable')) {
+            new PostSearcher($this);
+        }
+
         return $this;
     }
 
