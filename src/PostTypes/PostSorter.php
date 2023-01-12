@@ -26,7 +26,7 @@ class PostSorter
     {
         $parentSlug = $this->postType->name === 'post' ? 'edit.php' : 'edit.php?post_type='.$this->postType->name;
 
-        $label = __('Sort', 'humble_core').' '.$this->postType->labels['name'];
+        $label = trans('Sort') . ' '.$this->postType->labels['name'];
 
         add_submenu_page(
             $parentSlug,
@@ -94,7 +94,7 @@ class PostSorter
 
             <div>
                 <h1 class="heading">
-                    Sort
+                    {{ trans('Sort') }}
                 </h1>
 
                 <div class="message updated fade" id="success">

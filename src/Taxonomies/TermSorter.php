@@ -46,7 +46,7 @@ class TermSorter
     {
         $parentSlug = $postType === 'post' ? 'edit.php' : 'edit.php?post_type='.$postType;
 
-        $label = __('Sort', 'humble_core').' '.$this->taxonomy->labels['name'];
+        $label = trans('Sort') . ' '.$this->taxonomy->labels['name'];
 
         add_submenu_page(
             $parentSlug,
@@ -99,7 +99,7 @@ class TermSorter
 
             <div>
                 <h1 class="heading">
-                    Sort
+                    {{ trans('Sort') }}
                 </h1>
 
                 <div class="message updated fade" id="success">

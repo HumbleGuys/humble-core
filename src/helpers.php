@@ -247,6 +247,25 @@ if (! function_exists('to_route')) {
     }
 }
 
+if (! function_exists('trans')) {
+    /**
+     * Translate the given message.
+     *
+     * @param  string|null  $key
+     * @param  array  $replace
+     * @param  string|null  $locale
+     * @return \Illuminate\Contracts\Translation\Translator|string|array|null
+     */
+    function trans($key = null, $replace = [], $locale = null)
+    {
+        if (is_null($key)) {
+            return app('translator');
+        }
+
+        return app('translator')->get($key, $replace, $locale);
+    }
+}
+
 if (! function_exists('validator')) {
     /**
      * Create a new Validator instance.
