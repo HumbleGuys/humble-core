@@ -9,39 +9,39 @@ use Illuminate\Support\Collection;
 
 class PostBuilder
 {
-    private $findId;
+    public $findId;
 
-    private $take = -1;
+    public $take = -1;
 
-    private $excludeIds;
+    public $excludeIds;
 
-    private $title;
+    public $title;
 
-    private $permalink;
+    public $permalink;
 
-    private $withDate;
+    public $withDate;
 
-    private $acf;
+    public $acf;
 
-    private $offset = 0;
+    public $offset = 0;
 
-    private $orderBy = 'post_date';
+    public $orderBy = 'post_date';
 
-    private $order = 'desc';
+    public $order = 'desc';
 
-    private $search;
+    public $search;
 
-    private $postStatus = 'publish';
+    public $postStatus = 'publish';
 
-    private $postName;
+    public $postName;
 
-    private $taxQuery;
+    public $taxQuery;
 
-    protected $postType;
+    public $postType;
 
-    protected $post;
+    public $post;
 
-    protected $model;
+    public $model;
 
     public function __construct($model)
     {
@@ -262,7 +262,7 @@ class PostBuilder
         }
     }
 
-    protected function getPosts(?array $postIn = null): array
+    public function getPosts(?array $postIn = null): array
     {
         $postStatus = [$this->postStatus];
 
