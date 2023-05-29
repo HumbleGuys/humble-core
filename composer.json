@@ -36,7 +36,8 @@
         "guzzlehttp/guzzle": "^7.4",
         "ramsey/uuid": "^4.4",
         "illuminate/validation": "^9.27",
-        "illuminate/translation": "^9.27"
+        "illuminate/translation": "^9.27",
+        "illuminate/console": "^9.27"
     },
     "require-dev": {
         "pestphp/pest": "^1.21",

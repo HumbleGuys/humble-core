@@ -78,6 +78,16 @@ class Application extends Container
 
     public function registerErrorHandler()
     {
+        if ($this->runningInConsole()) {
+            $whoops = new \Whoops\Run;
+
+            $whoops->prependHandler(new \Whoops\Handler\PlainTextHandler);
+
+            $whoops->register();
+
+            return;
+        }
+
         if ($_ENV['APP_DEBUG'] == 'true') {
             $whoops = new \Whoops\Run;
 
