@@ -26,17 +26,17 @@ class Kernel implements KernelContract
      */
     public function handle($input, $output = null)
     {
-        $argument = $input->getFirstArgument();
+        $name = $input->getFirstArgument();
 
-        if (! isset($this->commands[$argument])) {
-            $output->writeln("The command '{$argument}' doesnt exists");
+        if (! isset($this->commands[$name])) {
+            $output->writeln("The command '{$name}' doesnt exists");
 
             return 0;
         }
 
-        $output->writeln("Running command: {$argument}");
+        $output->writeln("Running command: {$name}");
 
-        $command = new $this->commands[$argument]($output);
+        $command = new $this->commands[$name]($input, $output);
 
         return $command->handle();
     }
@@ -45,7 +45,6 @@ class Kernel implements KernelContract
      * Run an Artisan console command by name.
      *
      * @param  string  $command
-     * @param  array  $parameters
      * @param  \Symfony\Component\Console\Output\OutputInterface|null  $outputBuffer
      * @return int
      */
@@ -57,7 +56,6 @@ class Kernel implements KernelContract
      * Queue an Artisan console command by name.
      *
      * @param  string  $command
-     * @param  array  $parameters
      * @return \Illuminate\Foundation\Bus\PendingDispatch
      */
     public function queue($command, array $parameters = [])

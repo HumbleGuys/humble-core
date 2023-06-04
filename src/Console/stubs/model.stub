@@ -1,0 +1,10 @@
+<?php
+
+namespace App\Models;
+
+use HumbleCore\PostTypes\PostModel;
+
+class {{ class }} extends PostModel
+{
+    public string $postType = '{{ postType }}';
+}
