@@ -18,4 +18,14 @@ class PostModel extends Jsonable
         $this->builder = new PostBuilder($this);
         $this->builder->postType($this->postType);
     }
+
+    public function hasStatus(string $status)
+    {
+        return $this->getStatus() === $status;
+    }
+
+    public function getStatus()
+    {
+        return get_post_status($this->id);
+    }
 }
