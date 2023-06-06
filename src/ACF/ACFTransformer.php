@@ -144,7 +144,7 @@ class ACFTransformer
 
         return collect($posts)->map(function ($post) {
             return self::postObject($post);
-        });
+        })->filter()->values();
     }
 
     public static function repeater($rows)
