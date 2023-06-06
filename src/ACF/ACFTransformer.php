@@ -127,7 +127,13 @@ class ACFTransformer
             $model->fromRelation();
         }
 
-        return $model->first();
+        $post = $model->first();
+
+        if (empty($post) || ! $post->hasStatus('publish')) {
+            return;
+        }
+
+        return $post;
     }
 
     public static function relationship($posts)
