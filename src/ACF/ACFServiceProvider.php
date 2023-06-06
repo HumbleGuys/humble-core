@@ -33,6 +33,9 @@ class ACFServiceProvider extends ServiceProvider
         Filter::add('acf/format_value/type=post_object', [ACFTransformer::class, 'postObject'], 100, 1);
         Filter::add('acf/format_value/type=relationship', [ACFTransformer::class, 'relationship'], 100, 1);
         Filter::add('acf/format_value/type=repeater', [ACFTransformer::class, 'repeater'], 100, 1);
+
+        Filter::add('acf/fields/relationship/query', [ACFAdminFilters::class, 'relationshipQuery']);
+        Filter::add('acf/fields/post_object/query', [ACFAdminFilters::class, 'relationshipQuery']);
     }
 
     public function boot()
