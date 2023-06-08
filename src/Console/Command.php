@@ -16,7 +16,7 @@ class Command
 
     protected function resolveStubPath($stub)
     {
-        $path = templatePath('vendor\humble-guys\humble-core\src\Console');
+        $path = __DIR__.'/stubs';
 
         return $path.$stub;
     }
