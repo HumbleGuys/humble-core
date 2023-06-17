@@ -32,6 +32,8 @@ abstract class Taxonomy
 
     public bool $show_in_quick_edit = false;
 
+    public bool $show_admin_column = true;
+
     public $model;
 
     public bool $sortable = false;
@@ -48,6 +50,7 @@ abstract class Taxonomy
                 'show_in_rest' => $this->show_in_rest,
                 'hierarchical' => $this->hierarchical,
                 'show_in_quick_edit' => $this->show_in_quick_edit,
+                'show_admin_column' => $this->show_admin_column,
             ]);
         });
 
