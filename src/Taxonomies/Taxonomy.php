@@ -3,6 +3,7 @@
 namespace HumbleCore\Taxonomies;
 
 use HumbleCore\Support\Facades\Action;
+use Illuminate\Support\Facades\Blade;
 
 abstract class Taxonomy
 {
@@ -27,6 +28,8 @@ abstract class Taxonomy
 
     public bool $hierarchical = true;
 
+    public bool $hideCreateOnPosts = true;
+
     public bool $show_in_quick_edit = false;
 
     public $model;
@@ -48,10 +51,32 @@ abstract class Taxonomy
             ]);
         });
 
+        if ($this->hideCreateOnPosts) {
+            $this->hideCreateOnPosts();
+        }
+
         if ($this->sortable) {
             new TermSorter($this);
         }
 
         return $this;
+    }
+
+    protected function hideCreateOnPosts()
+    {
+        Action::add('admin_footer', function () {
+            $html =
+            <<<'blade'
+                <style>
+                    #{{ $name }}-adder {
+                        display: none;
+                    }
+                </style>
+            blade;
+
+            echo Blade::render($html, [
+                'name' => $this->name,
+            ]);
+        });
     }
 }
