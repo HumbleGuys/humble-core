@@ -4,7 +4,7 @@ namespace HumbleCore\ACF;
 
 class ACF
 {
-    public function get(string $name, string|int $postId)
+    public function get($name, $postId)
     {
         if (! function_exists('get_field')) {
             return;
