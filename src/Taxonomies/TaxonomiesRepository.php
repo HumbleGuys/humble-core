@@ -46,13 +46,15 @@ class TaxonomiesRepository
 
             public array $postTypes = ['post'];
 
-            public array $labels = [
-                'name' => 'Kategorier',
-                'singular_name' => 'Kategori',
-            ];
+            public array $labels = [];
 
             public bool $sortable = true;
         };
+
+        $categoriesTax->labels = [
+            'name' => _x('Categories', 'taxonomy general name'),
+            'singular_name' => _x('Category', 'taxonomy singular name'),
+        ];
 
         $categoriesTax->model = $categoriesModel;
 
