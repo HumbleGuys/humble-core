@@ -41,6 +41,10 @@ abstract class Taxonomy
     public function register(): self
     {
         Action::add('init', function () {
+            if (method_exists($this, 'beforeRegister')) {
+                $this->beforeRegister();
+            }
+
             register_taxonomy($this->name, $this->postTypes, [
                 'labels' => $this->labels,
                 'public' => $this->public,
