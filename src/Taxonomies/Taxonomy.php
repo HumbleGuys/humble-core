@@ -28,6 +28,8 @@ abstract class Taxonomy
 
     public bool $hierarchical = true;
 
+    public bool $hideDescriptionField = true;
+
     public bool $hideCreateOnPosts = true;
 
     public bool $show_in_quick_edit = false;
@@ -62,6 +64,10 @@ abstract class Taxonomy
             $this->hideCreateOnPosts();
         }
 
+        if ($this->hideDescriptionField) {
+            $this->hideDescriptionField();
+        }
+
         if ($this->sortable) {
             new TermSorter($this);
         }
@@ -84,6 +90,33 @@ abstract class Taxonomy
             echo Blade::render($html, [
                 'name' => $this->name,
             ]);
+        });
+    }
+
+    protected function hideDescriptionField()
+    {
+        $callback = function () {
+            $css =
+                <<<'blade'
+                    <style>
+                        .term-description-wrap {
+                            display: none;
+                        }
+                    </style>
+                blade;
+
+            echo Blade::render($css);
+        };
+
+        Action::add("{$this->name}_add_form", $callback);
+        Action::add("{$this->name}_edit_form", $callback);
+
+        Action::add("manage_edit-{$this->name}_columns", function ($columns) {
+            if (isset($columns['description'])) {
+                unset($columns['description']);
+            }
+
+            return $columns;
         });
     }
 }
