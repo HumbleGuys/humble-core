@@ -14,6 +14,12 @@ class RoutingServiceProvider extends ServiceProvider
         });
 
         Filter::add('template_include', function ($template) {
+            if (app()->isProduction() && app()->isUnderConstruction() && ! is_user_logged_in()) {
+                echo get_bloginfo('name');
+
+                return;
+            }
+
             echo $this->app->router->initWp($template);
         });
     }

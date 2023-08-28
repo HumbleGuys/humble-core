@@ -407,6 +407,11 @@ class Application extends Container
         return $_ENV['APP_ENV'] === 'local';
     }
 
+    public function isUnderConstruction()
+    {
+        return isset($_ENV['APP_UNDER_CONSTRUCTION']) && $_ENV['APP_UNDER_CONSTRUCTION'] == 'true';
+    }
+
     public function runningUnitTests(): bool
     {
         return $this->bound('env') && $this['env'] === 'testing';
