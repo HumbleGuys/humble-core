@@ -35,6 +35,11 @@ class PostBuilder
 
     public $postName;
 
+    private $metaQuery = [
+        'relation' => 'AND',
+        'metaFilters' => [],
+    ];
+
     public $taxQuery;
 
     public $postType;
@@ -101,6 +106,37 @@ class PostBuilder
         $this->search = urldecode($query);
 
         return $this->model;
+    }
+
+    public function where($field, $operator = null, $value = null, $type = null, $relation = null): PostModel
+    {
+        [$value, $operator] = $this->prepareValueAndOperator(
+            $value,
+            $operator,
+            func_num_args() === 2
+        );
+
+        if (empty($this->metaQuery['metaFilters']['relation'])) {
+            $this->metaQuery['metaFilters']['relation'] = 'AND';
+        }
+
+        if ($relation) {
+            $this->metaQuery['metaFilters']['relation'] = $relation;
+        }
+
+        $this->metaQuery['metaFilters'][] = [
+            'key' => $field,
+            'value' => $value,
+            'type' => $type,
+            'compare' => $operator,
+        ];
+
+        return $this->model;
+    }
+
+    public function whereDate($field, $operator, $value, $relation = null): PostModel
+    {
+        return $this->where($field, $operator, $value, 'DATE', $relation);
     }
 
     public function whereHasTerm(TermModel $term): PostModel
@@ -262,7 +298,7 @@ class PostBuilder
         }
     }
 
-    public function getPosts(?array $postIn = null): array
+    public function getPosts(array $postIn = null): array
     {
         $postStatus = [$this->postStatus];
 
@@ -284,6 +320,7 @@ class PostBuilder
             'tax_query' => $this->taxQuery,
             's' => $this->search,
             'suppress_filters' => false,
+            'meta_query' => $this->metaQuery,
         ]);
     }
 
@@ -327,5 +364,14 @@ class PostBuilder
     protected function getPermalink(): string
     {
         return get_the_permalink($this->post->ID);
+    }
+
+    protected function prepareValueAndOperator($value, $operator, $useDefault = false): array
+    {
+        if ($useDefault) {
+            return [$operator, '='];
+        }
+
+        return [$value, $operator];
     }
 }
