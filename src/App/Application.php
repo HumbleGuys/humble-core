@@ -36,6 +36,8 @@ class Application extends Container
 
     protected $langPath;
 
+    protected string $locale;
+
     protected $isRunningInConsole;
 
     protected $booted = false;
@@ -50,7 +52,7 @@ class Application extends Container
 
     protected $loadedProviders = [];
 
-    public function __construct(?string $basePath, ?string $templatePath = null)
+    public function __construct(?string $basePath, string $templatePath = null)
     {
         $this->registerErrorHandler();
 
@@ -455,8 +457,23 @@ class Application extends Container
 
     public function getLocale()
     {
+        if (! isset($this->locale)) {
+            $this->setLocale();
+        }
+
+        return $this->locale;
+    }
+
+    public function setLocale(string $locale = null)
+    {
+        if ($locale) {
+            $this->locale = $locale;
+
+            return;
+        }
+
         if (function_exists('get_bloginfo')) {
-            return get_bloginfo('language');
+            $this->locale = get_bloginfo('language');
         }
     }
 

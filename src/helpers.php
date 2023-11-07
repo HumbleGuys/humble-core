@@ -256,13 +256,13 @@ if (! function_exists('trans')) {
      * @param  string|null  $locale
      * @return \Illuminate\Contracts\Translation\Translator|string|array|null
      */
-    function trans($key = null, $replace = [], $locale = null)
+    function trans($key = null, $replace = [])
     {
         if (is_null($key)) {
             return app('translator');
         }
 
-        return app('translator')->get($key, $replace, $locale);
+        return app('translator')->get($key, $replace, app()->getLocale());
     }
 }
 
