@@ -144,7 +144,7 @@ class Route
         if ($this->verb !== 'WP') {
             $baseUrl = get_home_url();
 
-            return "{$baseUrl}/api/{$this->path}";
+            return "{$baseUrl}/api/{$this->path}/";
         }
 
         if ($this->path === 'front-page') {

@@ -33,9 +33,9 @@ class Router
         return $this->addRoute('WP', $path, $handler);
     }
 
-    public function addRoute($verb, $path, $handler)
+    public function addRoute($verb, $path, $handler, $name = null)
     {
-        $route = new Route($verb, $path, $handler);
+        $route = new Route($verb, $path, $handler, $name);
 
         $this->routes[] = $route;
 
