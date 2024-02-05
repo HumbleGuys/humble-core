@@ -2,12 +2,12 @@
 
 namespace HumbleCore\ACF\Fields;
 
-use Extended\ACF\Fields\WysiwygEditor;
+use Extended\ACF\Fields\WYSIWYGEditor;
 
 class SimpleEditor
 {
     public static function make($label, $name): WysiwygEditor
     {
-        return WysiwygEditor::make($label, $name)->mediaUpload(false)->toolbar(['bold', 'italic', 'underline', 'strikethrough', 'undo', 'redo', 'link']);
+        return WYSIWYGEditor::make($label, $name)->disableMediaUpload()->toolbar(['bold', 'italic', 'underline', 'strikethrough', 'undo', 'redo', 'link']);
     }
 }
