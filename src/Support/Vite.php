@@ -522,7 +522,7 @@ class Vite implements Htmlable
      */
     protected function manifestPath($buildDirectory)
     {
-        return resourcePath($buildDirectory.'/manifest.json');
+        return resourcePath($buildDirectory.'/.vite/manifest.json');
     }
 
     /**
