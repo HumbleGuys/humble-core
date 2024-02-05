@@ -36,7 +36,7 @@
         "ramsey/uuid": "^4.4",
         "roots/wp-password-bcrypt": "^1.1",
         "symfony/var-dumper": "^6.1",
-        "vinkla/extended-acf": "^13.1",
+        "vinkla/extended-acf": "^14.0",
         "vlucas/phpdotenv": "^5.4"
     },
     "require-dev": {
