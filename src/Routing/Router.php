@@ -8,24 +8,26 @@ class Router
 {
     protected array $routes = [];
 
+    protected string $pathPrefix = '';
+
     public function get(string $path, $handler): Route
     {
-        return $this->addRoute('GET', $path, $handler);
+        return $this->addRoute('GET', $this->addPathPrefix($path), $handler);
     }
 
     public function post(string $path, $handler): Route
     {
-        return $this->addRoute('POST', $path, $handler);
+        return $this->addRoute('POST', $this->addPathPrefix($path), $handler);
     }
 
     public function put(string $path, $handler): Route
     {
-        return $this->addRoute('PUT', $path, $handler);
+        return $this->addRoute('PUT', $this->addPathPrefix($path), $handler);
     }
 
     public function delete(string $path, $handler): Route
     {
-        return $this->addRoute('DELETE', $path, $handler);
+        return $this->addRoute('DELETE', $this->addPathPrefix($path), $handler);
     }
 
     public function wp(string $path, $handler): Route
@@ -59,10 +61,14 @@ class Router
 
     public function loadApiRoutesFrom($path)
     {
+        $this->pathPrefix = '/api';
+
         include $path;
+
+        $this->pathPrefix = '';
     }
 
-    public function resolveApiRoute()
+    public function resolveRoute()
     {
         $route = collect($this->routes)->filter(function ($route) {
             return $route->verb !== 'WP';
@@ -71,7 +77,19 @@ class Router
         });
 
         if ($route) {
-            $res = $route->resolve();
+            if (str_contains($route->path, '{')) {
+                $requestParts = str(request()->server('REQUEST_URI'))->beforeLast('?')->explode('/');
+
+                $arguments = str($route->path)->explode('/')->map(function ($part, $index) use ($requestParts) {
+                    if (! str($part)->startsWith('{')) {
+                        return;
+                    }
+
+                    return $requestParts[$index];
+                })->filter()->values();
+            }
+
+            $res = $route->resolve($arguments ?? []);
 
             response($res, 200)->send();
             exit();
@@ -93,5 +111,10 @@ class Router
         throw new UnexpectedValueException('No route found.');
 
         return $template;
+    }
+
+    protected function addPathPrefix(string $path): string
+    {
+        return "{$this->pathPrefix}/{$path}";
     }
 }

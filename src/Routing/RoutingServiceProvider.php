@@ -26,6 +26,6 @@ class RoutingServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        app('router')->resolveApiRoute();
+        app('router')->resolveRoute();
     }
 }

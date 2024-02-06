@@ -20,27 +20,31 @@ class Route
         if ($this->verb === 'WP') {
             return $this->isMatchingWpRoute();
         } else {
-            return $this->isMatchingApiRoute();
+            return $this->isMatchingRoute();
         }
 
         return false;
     }
 
-    public function isMatchingApiRoute()
+    public function isMatchingRoute()
     {
         $route = request()->server('REQUEST_URI');
 
         $route = str($route)->beforeLast('?');
 
-        if (! Str::startsWith($route, '/api')) {
-            return false;
-        }
-
         if (request()->server('REQUEST_METHOD') !== $this->verb) {
             return false;
         }
 
-        return str($route)->replace('/api', '')->replaceFirst('/', '')->replaceLast('/', '')->is($this->path);
+        if ($route->endsWith('/')) {
+            $route = str($route)->replaceLast('/', '');
+        }
+
+        $routePath = str($this->path)->explode('/')->map(function ($part) {
+            return str($part)->startsWith('{') ? '*' : $part;
+        })->join('/');
+
+        return $route->is($routePath) && $route->substrCount('/') === str($routePath)->substrCount('/');
     }
 
     public function isMatchingWpRoute()
@@ -110,23 +114,23 @@ class Route
     {
         $id = $this->getWpIdForRoute();
 
-        return $this->resolve($id);
+        return $this->resolve([$id]);
     }
 
-    public function resolve($arg = null)
+    public function resolve($arg = [])
     {
         if (is_callable($this->handler)) {
-            return call_user_func($this->handler, $arg);
+            return call_user_func($this->handler, ...$arg);
         }
 
         if (is_array($this->handler)) {
             [$class, $method] = $this->handler;
 
-            return (new $class)->{$method}($arg);
+            return (new $class)->{$method}(...$arg);
         }
 
         if (is_string($this->handler) && method_exists($this->handler, '__invoke')) {
-            return (new $this->handler)->__invoke($arg);
+            return (new $this->handler)->__invoke(...$arg);
         }
 
         throw new UnexpectedValueException("Invalid route action for: [{$this->path}].");
@@ -144,7 +148,7 @@ class Route
         if ($this->verb !== 'WP') {
             $baseUrl = get_home_url();
 
-            return "{$baseUrl}/api/{$this->path}/";
+            return "{$baseUrl}/{$this->path}/";
         }
 
         if ($this->path === 'front-page') {
@@ -179,6 +183,6 @@ class Route
             return get_term_link($key, Str::after($this->path, 'taxonomy-'));
         }
 
-        throw('Unkown route type');
+        throw ('Unkown route type');
     }
 }
