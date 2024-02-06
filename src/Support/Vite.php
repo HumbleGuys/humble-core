@@ -468,7 +468,9 @@ class Vite implements Htmlable
      */
     protected function hotAsset($asset)
     {
-        return 'http://localhost:5173/'.$asset;
+        $themeName = str(templatePath())->after('/themes/');
+
+        return "http://localhost:5173/wp-content/themes/{$themeName}/{$asset}";
     }
 
     /**
