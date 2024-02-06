@@ -12,7 +12,7 @@ class PostTypesRepository
     public function loadMenuIcons()
     {
         Action::add('admin_enqueue_scripts', function () {
-            wp_enqueue_style('line-awesome', 'https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css', false, null);
+            wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/solid.min.css', false, null);
         });
     }
 

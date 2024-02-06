@@ -109,13 +109,13 @@ abstract class PostType
                 <style type="text/css">
                     .menu-icon-{{ $postType }} .dashicons-admin-post::before { 
                         content: '{{ $icon }}'; 
-                        font-family: 'Line Awesome Free' !important;
-                        font-size: 22px !important;
+                        font-family: 'Font Awesome 6 Free' !important;
                         font-weight: 900 !important;
+                        font-size: 16px !important;
                         font-style: normal;
                         font-variant: normal;
                         text-rendering: auto;
-                        line-height: 1;
+                        line-height: 1.3 !important;
                     }
                 </style>
             blade;
