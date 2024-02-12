@@ -61,7 +61,7 @@ class ViewServiceProvider extends IlluminateViewServiceProvider
 
                 $componentUrlPath = str($componentPath)->replace('.', '/');
 
-                app('router')->addRoute('GET', "views/{$componentUrlPath}", [$viewComponent, 'asController'], "views.{$componentPath}");
+                app('router')->addRoute('GET', "/api/views/{$componentUrlPath}", [$viewComponent, 'asController'], "views.{$componentPath}");
             }
         }
     }
