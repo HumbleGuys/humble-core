@@ -109,7 +109,7 @@ if (! function_exists('config')) {
      *
      * If an array is passed as the key, we will assume you want to set an array of values.
      */
-    function config(string|array $key = null, mixed $default = null): mixed
+    function config(string|array|null $key = null, mixed $default = null): mixed
     {
         if (is_null($key)) {
             return app('config');
@@ -142,7 +142,6 @@ if (! function_exists('logger')) {
      * Log a debug message to the logs.
      *
      * @param  string|null  $message
-     * @param  array  $context
      * @return \Illuminate\Log\LogManager|null
      */
     function logger($message = null, array $context = [])
@@ -186,13 +185,25 @@ if (! function_exists('svg')) {
     }
 }
 
+if (! function_exists('resolve')) {
+    /**
+     * Resolve a service from the container.
+     *
+     * @param  string  $name
+     * @return mixed
+     */
+    function resolve($name, array $parameters = [])
+    {
+        return app($name, $parameters);
+    }
+}
+
 if (! function_exists('response')) {
     /**
      * Return a new response from the application.
      *
      * @param  \Illuminate\Contracts\View\View|string|array|null  $content
      * @param  int  $status
-     * @param  array  $headers
      * @return \Illuminate\Http\Response|\Illuminate\Contracts\Routing\ResponseFactory
      */
     function response($content = '', $status = 200, array $headers = [])
@@ -270,10 +281,6 @@ if (! function_exists('validator')) {
     /**
      * Create a new Validator instance.
      *
-     * @param  array  $data
-     * @param  array  $rules
-     * @param  array  $messages
-     * @param  array  $customAttributes
      * @return \Illuminate\Contracts\Validation\Validator|\Illuminate\Contracts\Validation\Factory
      */
     function validator(array $data = [], array $rules = [], array $messages = [], array $customAttributes = [])
@@ -291,11 +298,6 @@ if (! function_exists('validator')) {
 if (! function_exists('validate')) {
     /**
      * Validates data
-     *
-     * @param  array  $data
-     * @param  array  $rules
-     * @param  array  $messages
-     * @param  array  $customAttributes
      */
     function validate(array $data = [], array $rules = [], array $messages = [], array $customAttributes = [])
     {
