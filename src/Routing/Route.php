@@ -148,7 +148,7 @@ class Route
         if ($this->verb !== 'WP') {
             $baseUrl = get_home_url();
 
-            return "{$baseUrl}/{$this->path}/";
+            return "{$baseUrl}{$this->path}/";
         }
 
         if ($this->path === 'front-page') {

@@ -18,7 +18,7 @@ class ViewServiceProvider extends IlluminateViewServiceProvider
 
         $this->loadViewComponentsFrom(templatePath('app/Views'));
 
-        if (!empty($this->viewComponents)) {
+        if (! empty($this->viewComponents)) {
             $this->registerViewComponentsRoutes();
         }
     }
@@ -29,14 +29,14 @@ class ViewServiceProvider extends IlluminateViewServiceProvider
             return "<?php echo svg($expression) ?>";
         });
 
-        if (!empty($this->viewComponents)) {
+        if (! empty($this->viewComponents)) {
             $this->registerViewComponents();
         }
     }
 
     protected function loadViewComponentsFrom(string $path): void
     {
-        if(!File::exists($path)) {
+        if (! File::exists($path)) {
             return;
         }
 
@@ -58,8 +58,10 @@ class ViewServiceProvider extends IlluminateViewServiceProvider
         foreach ($this->viewComponents as $viewComponent) {
             if (method_exists($viewComponent, 'asController')) {
                 $componentPath = $viewComponent::$componentPath;
-    
-                app('router')->addRoute('GET', "views/{$componentPath}", [$viewComponent, 'asController'], "views.{$componentPath}");
+
+                $componentUrlPath = str($componentPath)->replace('.', '/');
+
+                app('router')->addRoute('GET', "views/{$componentUrlPath}", [$viewComponent, 'asController'], "views.{$componentPath}");
             }
         }
     }
