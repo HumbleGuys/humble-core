@@ -6,7 +6,7 @@ class MailMessage extends Mailer
 {
     public $rows = [];
 
-    public function heading($heading)
+    public function heading($heading): self
     {
         $this->rows[] = [
             'type' => 'heading',
@@ -16,7 +16,7 @@ class MailMessage extends Mailer
         return $this;
     }
 
-    public function text($content)
+    public function text($content): self
     {
         $this->rows[] = [
             'type' => 'content',
@@ -26,7 +26,7 @@ class MailMessage extends Mailer
         return $this;
     }
 
-    public function button($label, $url)
+    public function button($label, $url): self
     {
         $this->rows[] = [
             'type' => 'button',

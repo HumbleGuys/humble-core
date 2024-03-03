@@ -74,28 +74,35 @@ class Mailer
         });
     }
 
-    public function to(string $to): Mailer
+    public function to(string $to): self
     {
         $this->to = $to;
 
         return $this;
     }
 
-    public function subject(string $subject): Mailer
+    public function subject(string $subject): self
     {
         $this->subject = $subject;
 
         return $this;
     }
 
-    public function replyTo(string $name, string $email): Mailer
+    public function replyTo(string $name, string $email): self
     {
         $this->headers[] = "Reply-To: {$name} <{$email}>";
 
         return $this;
     }
 
-    public function template(string $template, array $mailData): Mailer
+    public function attach(string $path): self
+    {
+        $this->attachments[] = $path;
+
+        return $this;
+    }
+
+    public function template(string $template, array $mailData): self
     {
         $this->mailData = $mailData;
         $this->body = view($template, $mailData);
