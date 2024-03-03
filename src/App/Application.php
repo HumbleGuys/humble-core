@@ -8,6 +8,7 @@ use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
 use Illuminate\Events\EventServiceProvider;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Filesystem\FilesystemServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Log\LogServiceProvider;
 use Illuminate\Support\Arr;
@@ -52,7 +53,7 @@ class Application extends Container
 
     protected $loadedProviders = [];
 
-    public function __construct(?string $basePath, string $templatePath = null)
+    public function __construct(?string $basePath, ?string $templatePath = null)
     {
         $this->registerErrorHandler();
 
@@ -155,12 +156,6 @@ class Application extends Container
 
         $this->instance('config', new Repository);
 
-        $filesystem = new Filesystem;
-
-        $this->bind('files', function ($app) use ($filesystem) {
-            return $filesystem;
-        });
-
         $this->instance(\Illuminate\Contracts\Foundation\Application::class, $this);
 
         $this->bind(
@@ -201,6 +196,7 @@ class Application extends Container
     protected function registerBaseServiceProviders(): void
     {
         $this->register(new EventServiceProvider($this));
+        $this->register(new FilesystemServiceProvider($this));
         $this->register(new LogServiceProvider($this));
         $this->register(new ValidationServiceProvider($this));
         $this->register(new TranslationServiceProvider($this));
@@ -464,7 +460,7 @@ class Application extends Container
         return $this->locale;
     }
 
-    public function setLocale(string $locale = null)
+    public function setLocale(?string $locale = null)
     {
         if ($locale) {
             $this->locale = $locale;

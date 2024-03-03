@@ -37,7 +37,8 @@
         "roots/wp-password-bcrypt": "^1.1",
         "symfony/var-dumper": "^6.1",
         "vinkla/extended-acf": "^14.0",
-        "vlucas/phpdotenv": "^5.4"
+        "vlucas/phpdotenv": "^5.4",
+        "league/flysystem": "^3.24"
     },
     "require-dev": {
         "pestphp/pest": "^1.21",
