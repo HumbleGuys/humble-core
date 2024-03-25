@@ -269,7 +269,7 @@ class PostBuilder
 
     public function get()
     {
-        return $this->model::hydrate($this->getItems(), $this->model->getAppends(), $this->model->getMutators());
+        return $this->model::hydrate($this->getItems(), $this->model->getAppends());
     }
 
     public function first()
@@ -298,7 +298,7 @@ class PostBuilder
         }
     }
 
-    public function getPosts(array $postIn = null): array
+    public function getPosts(?array $postIn = null): array
     {
         $postStatus = [$this->postStatus];
 

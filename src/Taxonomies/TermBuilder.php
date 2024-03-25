@@ -157,7 +157,7 @@ class TermBuilder
 
         foreach ($terms as $key => $term) {
             if ($term->parent === 0) {
-                $term->childs = $this->model::hydrate($this->findChilds($terms, $term->id), $this->model->getAppends(), $this->model->getMutators());
+                $term->childs = $this->model::hydrate($this->findChilds($terms, $term->id), $this->model->getAppends());
                 $out[] = $term;
             }
         }
@@ -173,7 +173,7 @@ class TermBuilder
             return collect();
         }
 
-        return $this->model::hydrate($items, $this->model->getAppends(), $this->model->getMutators());
+        return $this->model::hydrate($items, $this->model->getAppends());
     }
 
     public function first()

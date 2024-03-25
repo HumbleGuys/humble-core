@@ -25,28 +25,28 @@ trait HasBuilder
             $this->setAttribute($key, $value);
         }
 
+        $this->castAttributes();
+
         $this->fireAppends();
     }
 
-    public function newInstance(array $attributes = [], array $appends = [], array $mutators = [])
+    public function newInstance(array $attributes = [], array $appends = [])
     {
         $model = new static(true);
 
         $model->setAppends($appends);
-
-        $model->setMutators($mutators);
 
         $model->boot($attributes);
 
         return $model;
     }
 
-    public static function hydrate(array $items, array $appends, array $mutators)
+    public static function hydrate(array $items, array $appends)
     {
         $instance = new static;
 
-        $items = array_map(function ($item) use ($instance, $appends, $mutators) {
-            return $instance->newInstance((array) $item, $appends, $mutators);
+        $items = array_map(function ($item) use ($instance, $appends) {
+            return $instance->newInstance((array) $item, $appends);
         }, $items);
 
         return collect($items)->values();
