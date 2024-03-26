@@ -28,6 +28,8 @@ class TermBuilder
 
     protected $model;
 
+    protected bool $onlyRootNodes = false;
+
     public function __construct($model)
     {
         $this->model = $model;
@@ -129,6 +131,13 @@ class TermBuilder
         return $this->model;
     }
 
+    public function rootNodes(): TermModel
+    {
+        $this->onlyRootNodes = true;
+
+        return $this->model;
+    }
+
     public function getItems()
     {
         if ($this->findId) {
@@ -207,6 +216,7 @@ class TermBuilder
             'taxonomy' => $this->name,
             'hide_empty' => $this->hideEmpty,
             'search' => $this->search,
+            'parent' => $this->onlyRootNodes ? false : '',
         ]);
     }
 
