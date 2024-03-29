@@ -154,7 +154,7 @@ class PostBuilder
         return $this->model;
     }
 
-    public function whereInTerms(Collection $terms): PostModel
+    public function whereInTerms(Collection $terms, string $relation = 'OR'): PostModel
     {
         $taxQuery = $terms->map(function ($term) {
             return [
@@ -166,7 +166,7 @@ class PostBuilder
 
         $this->taxQuery = [
             [
-                'relation' => 'OR',
+                'relation' => $relation,
                 ...$taxQuery,
             ],
         ];
