@@ -30,6 +30,8 @@ class TermBuilder
 
     protected bool $onlyRootNodes = false;
 
+    protected ?int $parentId = null;
+
     public function __construct($model)
     {
         $this->model = $model;
@@ -138,6 +140,13 @@ class TermBuilder
         return $this->model;
     }
 
+    public function whereParent(int $termId): TermModel
+    {
+        $this->parentId = $termId;
+
+        return $this->model;
+    }
+
     public function getItems()
     {
         if ($this->findId) {
@@ -212,11 +221,19 @@ class TermBuilder
             return is_array($terms) ? $terms : null;
         }
 
+        $parent = '';
+
+        if ($this->parentId) {
+            $parent = $this->parentId;
+        } elseif ($this->onlyRootNodes) {
+            $parent = false;
+        }
+
         return get_terms([
             'taxonomy' => $this->name,
             'hide_empty' => $this->hideEmpty,
             'search' => $this->search,
-            'parent' => $this->onlyRootNodes ? false : '',
+            'parent' => $parent,
         ]);
     }
 
