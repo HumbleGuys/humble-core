@@ -10,6 +10,8 @@ class Router
 
     protected string $pathPrefix = '';
 
+    protected ?Route $currentRoute = null;
+
     public function get(string $path, $handler): Route
     {
         return $this->addRoute('GET', $this->addPathPrefix($path), $handler);
@@ -54,6 +56,11 @@ class Router
         return collect($this->routes)->firstWhere('name', $name);
     }
 
+    public function getCurrentRoute(): ?Route
+    {
+        return $this->currentRoute;
+    }
+
     public function loadRoutesFrom($path)
     {
         include $path;
@@ -77,6 +84,8 @@ class Router
         });
 
         if ($route) {
+            $this->currentRoute = $route;
+
             if (str_contains($route->path, '{')) {
                 $requestParts = str(request()->server('REQUEST_URI'))->beforeLast('?')->explode('/');
 
@@ -105,6 +114,8 @@ class Router
         });
 
         if ($route) {
+            $this->currentRoute = $route;
+
             return $route->resolveWpRoute();
         }
 
