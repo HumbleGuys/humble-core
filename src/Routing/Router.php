@@ -2,6 +2,7 @@
 
 namespace HumbleCore\Routing;
 
+use HumbleCore\Support\Facades\Action;
 use UnexpectedValueException;
 
 class Router
@@ -86,6 +87,8 @@ class Router
         if ($route) {
             $this->currentRoute = $route;
 
+            $arguments = [];
+
             if (str_contains($route->path, '{')) {
                 $requestParts = str(request()->server('REQUEST_URI'))->beforeLast('?')->explode('/');
 
@@ -98,10 +101,11 @@ class Router
                 })->filter()->values();
             }
 
-            $res = $route->resolve($arguments ?? []);
-
-            response($res, 200)->send();
-            exit();
+            Action::add('wp_loaded', function () use ($route, $arguments) {
+                $res = $route->resolve($arguments ?? []);
+                response($res, 200)->send();
+                exit();
+            });
         }
     }
 
