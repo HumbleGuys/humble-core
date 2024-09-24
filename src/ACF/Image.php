@@ -59,6 +59,14 @@ class Image extends Jsonable
         return $this->sizes["{$size}-height"];
     }
 
+    public function aspectRatio(string $size = 'hd'): string
+    {
+        $width = $this->width($size);
+        $height = $this->height($size);
+
+        return "{$width} / {$height}";
+    }
+
     public function toArray(): array
     {
         return [
