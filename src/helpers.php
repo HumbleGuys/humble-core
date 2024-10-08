@@ -317,6 +317,23 @@ if (! function_exists('validate')) {
     }
 }
 
+if (! function_exists('value')) {
+    /**
+     * Return the default value of the given value.
+     *
+     * @template TValue
+     * @template TArgs
+     *
+     * @param  TValue|\Closure(TArgs): TValue  $value
+     * @param  TArgs  ...$args
+     * @return TValue
+     */
+    function value($value, ...$args)
+    {
+        return $value instanceof Closure ? $value(...$args) : $value;
+    }
+}
+
 if (! function_exists('view')) {
     function view(?string $view = null, array $data = [], array $mergeData = []): string
     {
@@ -327,5 +344,25 @@ if (! function_exists('view')) {
         }
 
         return $factory->make($view, $data, $mergeData)->render();
+    }
+}
+
+
+if (! function_exists('when')) {
+    /**
+     * Return a value if the given condition is true.
+     *
+     * @param  mixed  $condition
+     * @param  \Closure|mixed  $value
+     * @param  \Closure|mixed  $default
+     * @return mixed
+     */
+    function when($condition, $value, $default = null)
+    {
+        if ($condition) {
+            return value($value, $condition);
+        }
+
+        return value($default, $condition);
     }
 }
