@@ -103,7 +103,9 @@ class Router
 
             Action::add('wp_loaded', function () use ($route, $arguments) {
                 $res = $route->resolve($arguments ?? []);
-                response($res, 200)->send();
+                response($res, 200, [
+                    'Cache-Control' => 'public',
+                ])->send();
                 exit();
             });
         }
