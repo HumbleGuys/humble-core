@@ -182,8 +182,6 @@ class Application extends Container
             );
         });
 
-        $this->make(PackageManifest::class)->build();
-
         $this->singleton('admin', function () {
             return new Admin;
         });
