@@ -12,8 +12,7 @@ class Route
         public $path,
         public $handler,
         public $name = null
-    ) {
-    }
+    ) {}
 
     public function isMatching()
     {
@@ -28,16 +27,12 @@ class Route
 
     public function isMatchingRoute()
     {
-        $route = request()->server('REQUEST_URI');
-
-        $route = str($route)->beforeLast('?');
+        $route = str(request()->server('REQUEST_URI'))
+            ->beforeLast('?')
+            ->rtrim('/');
 
         if (request()->server('REQUEST_METHOD') !== $this->verb) {
             return false;
-        }
-
-        if ($route->endsWith('/')) {
-            $route = str($route)->replaceLast('/', '');
         }
 
         $routePath = str($this->path)->explode('/')->map(function ($part) {
