@@ -4,6 +4,7 @@ namespace HumbleCore\App;
 
 use HumbleCore\Support\Vite;
 use Illuminate\Cache\CacheManager;
+use Illuminate\Cache\CacheServiceProvider;
 use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
 use Illuminate\Events\EventServiceProvider;
@@ -172,10 +173,6 @@ class Application extends Container
             }
         );
 
-        $this->singleton('cache', function ($app) {
-            return new CacheManager($app);
-        });
-
         $this->singleton(PackageManifest::class, function () {
             return new PackageManifest(
                 new Filesystem, $this->templatePath(), $this->storagePath('cache/packages.php')
@@ -193,6 +190,7 @@ class Application extends Container
 
     protected function registerBaseServiceProviders(): void
     {
+        $this->register(new CacheServiceProvider($this));
         $this->register(new EventServiceProvider($this));
         $this->register(new FilesystemServiceProvider($this));
         $this->register(new LogServiceProvider($this));
