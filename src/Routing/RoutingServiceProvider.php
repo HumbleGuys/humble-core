@@ -23,6 +23,8 @@ class RoutingServiceProvider extends ServiceProvider
             try {
                 echo $this->app->router->initWp($template);
             }catch (\Exception $e){
+                logger()->error($e->getMessage());
+
                 if (!empty($this->app->router->serverErrorHandler)) {
                     call_user_func($this->app->router->serverErrorHandler, $e);
                 }
