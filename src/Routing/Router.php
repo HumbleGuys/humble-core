@@ -13,6 +13,8 @@ class Router
 
     protected ?Route $currentRoute = null;
 
+    public $serverErrorHandler;
+
     public function get(string $path, $handler): Route
     {
         return $this->addRoute('GET', $this->addPathPrefix($path), $handler);
@@ -128,6 +130,11 @@ class Router
         throw new UnexpectedValueException('No route found.');
 
         return $template;
+    }
+
+    public function setServerErrorHandler(callable $handler)
+    {
+        $this->serverErrorHandler = $handler;
     }
 
     protected function addPathPrefix(string $path): string

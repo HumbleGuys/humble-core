@@ -20,7 +20,19 @@ class RoutingServiceProvider extends ServiceProvider
                 return;
             }
 
-            echo $this->app->router->initWp($template);
+            try {
+                echo $this->app->router->initWp($template);
+            }catch (\Exception $e){
+                if (!empty($this->app->router->serverErrorHandler)) {
+                    call_user_func($this->app->router->serverErrorHandler, $e);
+                }
+
+                response("500 error", 500, [
+                    'Cache-Control' => 'no-cache',
+                ])->send();
+
+                exit();
+            }
         });
     }
 
