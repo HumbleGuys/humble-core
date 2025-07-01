@@ -23,6 +23,10 @@ class RoutingServiceProvider extends ServiceProvider
             try {
                 echo $this->app->router->initWp($template);
             }catch (\Exception $e){
+                if (app()->isLocal()) {
+                    throw $e;
+                }
+
                 logger()->error($e->getMessage());
 
                 if (!empty($this->app->router->serverErrorHandler)) {
