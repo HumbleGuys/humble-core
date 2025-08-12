@@ -5,6 +5,7 @@ use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 if (! function_exists('app')) {
     function app(?string $abstract = null, array $parameters = [])
@@ -20,11 +21,15 @@ if (! function_exists('app')) {
 if (! function_exists('asset')) {
     function asset(?string $path = null): string
     {
-        if (! function_exists('get_template_directory_uri')) {
-            return '/resources/'.$path; // temp fix
+        if (config('app.useTheme') === false) {
+            return Str::startsWith($path, '/') ? $path : "/{$path}";
         }
 
-        return get_template_directory_uri().'/resources/'.$path;
+        if (! function_exists('get_template_directory_uri')) {
+            return '/resources/' . $path; // temp fix
+        }
+
+        return get_template_directory_uri() . '/resources/' . $path;
     }
 }
 
@@ -168,7 +173,7 @@ if (! function_exists('menu')) {
 if (! function_exists('svg')) {
     function svg(string $name, string $class = '')
     {
-        $svg = file_get_contents(resourcePath('assets/images/'.$name.'.svg'));
+        $svg = file_get_contents(resourcePath('assets/images/' . $name . '.svg'));
 
         if (empty($class)) {
             return $svg;
@@ -244,7 +249,7 @@ if (! function_exists('route')) {
         $url = $route->url($key);
 
         if (! empty($query)) {
-            $url .= '?'.Arr::query($query);
+            $url .= '?' . Arr::query($query);
         }
 
         return $url;

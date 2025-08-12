@@ -159,7 +159,7 @@ class Vite implements Htmlable
     public function useScriptTagAttributes($attributes)
     {
         if (! is_callable($attributes)) {
-            $attributes = fn () => $attributes;
+            $attributes = fn() => $attributes;
         }
 
         $this->scriptTagAttributesResolvers[] = $attributes;
@@ -176,7 +176,7 @@ class Vite implements Htmlable
     public function useStyleTagAttributes($attributes)
     {
         if (! is_callable($attributes)) {
-            $attributes = fn () => $attributes;
+            $attributes = fn() => $attributes;
         }
 
         $this->styleTagAttributesResolvers[] = $attributes;
@@ -202,7 +202,7 @@ class Vite implements Htmlable
             return new HtmlString(
                 $entrypoints
                     ->prepend('@vite/client')
-                    ->map(fn ($entrypoint) => $this->makeTagForChunk($entrypoint, $this->hotAsset($entrypoint), null, null))
+                    ->map(fn($entrypoint) => $this->makeTagForChunk($entrypoint, $this->hotAsset($entrypoint), null, null))
                     ->join('')
             );
         }
@@ -246,9 +246,9 @@ class Vite implements Htmlable
             }
         }
 
-        [$stylesheets, $scripts] = $tags->partition(fn ($tag) => str_starts_with($tag, '<link'));
+        [$stylesheets, $scripts] = $tags->partition(fn($tag) => str_starts_with($tag, '<link'));
 
-        return new HtmlString($stylesheets->join('').$scripts->join(''));
+        return new HtmlString($stylesheets->join('') . $scripts->join(''));
     }
 
     /**
@@ -267,7 +267,8 @@ class Vite implements Htmlable
             && $this->integrityKey !== false
             && ! array_key_exists($this->integrityKey, $chunk ?? [])
             && $this->scriptTagAttributesResolvers === []
-            && $this->styleTagAttributesResolvers === []) {
+            && $this->styleTagAttributesResolvers === []
+        ) {
             return $this->makeTag($url);
         }
 
@@ -386,7 +387,7 @@ class Vite implements Htmlable
             'nonce' => $this->nonce ?? false,
         ], $attributes));
 
-        return '<script '.implode(' ', $attributes).'></script>';
+        return '<script ' . implode(' ', $attributes) . '></script>';
     }
 
     /**
@@ -404,7 +405,7 @@ class Vite implements Htmlable
             'nonce' => $this->nonce ?? false,
         ], $attributes));
 
-        return '<link '.implode(' ', $attributes).' />';
+        return '<link ' . implode(' ', $attributes) . ' />';
     }
 
     /**
@@ -427,9 +428,9 @@ class Vite implements Htmlable
     protected function parseAttributes($attributes)
     {
         return Collection::make($attributes)
-            ->reject(fn ($value, $key) => in_array($value, [false, null], true))
-            ->flatMap(fn ($value, $key) => $value === true ? [$key] : [$key => $value])
-            ->map(fn ($value, $key) => is_int($key) ? $value : $key.'="'.$value.'"')
+            ->reject(fn($value, $key) => in_array($value, [false, null], true))
+            ->flatMap(fn($value, $key) => $value === true ? [$key] : [$key => $value])
+            ->map(fn($value, $key) => is_int($key) ? $value : $key . '="' . $value . '"')
             ->values()
             ->all();
     }
@@ -468,6 +469,10 @@ class Vite implements Htmlable
      */
     protected function hotAsset($asset)
     {
+        if (config('app.useTheme') === false) {
+            return "http://localhost:5173/{$asset}";
+        }
+
         $themeName = str(templatePath())->after('/themes/');
 
         return "http://localhost:5173/wp-content/themes/{$themeName}/{$asset}";
@@ -490,7 +495,7 @@ class Vite implements Htmlable
 
         $chunk = $this->chunk($this->manifest($buildDirectory), $asset);
 
-        return asset($buildDirectory.'/'.$chunk['file']);
+        return asset($buildDirectory . '/' . $chunk['file']);
     }
 
     /**
@@ -524,7 +529,13 @@ class Vite implements Htmlable
      */
     protected function manifestPath($buildDirectory)
     {
-        return resourcePath($buildDirectory.'/.vite/manifest.json');
+        $path = $buildDirectory . '/.vite/manifest.json';
+
+        if (config('app.useTheme') === false) {
+            return publicPath($path);
+        }
+
+        return resourcePath($path);
     }
 
     /**
