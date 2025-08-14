@@ -15,6 +15,8 @@ class Router
 
     public $serverErrorHandler;
 
+    public $underConstructionHandler;
+
     public function get(string $path, $handler): Route
     {
         return $this->addRoute('GET', $this->addPathPrefix($path), $handler);
@@ -135,6 +137,11 @@ class Router
     public function setServerErrorHandler(callable $handler)
     {
         $this->serverErrorHandler = $handler;
+    }
+
+    public function setUnderConstructionHandler(callable $handler)
+    {
+        $this->underConstructionHandler = $handler;
     }
 
     protected function addPathPrefix(string $path): string

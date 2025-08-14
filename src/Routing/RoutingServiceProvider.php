@@ -15,6 +15,10 @@ class RoutingServiceProvider extends ServiceProvider
 
         Filter::add('template_include', function ($template) {
             if (app()->isProduction() && app()->isUnderConstruction() && ! is_user_logged_in()) {
+                if (!empty($this->app->router->underConstructionHandler)) {
+                    return call_user_func($this->app->router->underConstructionHandler);
+                }
+
                 echo get_bloginfo('name');
 
                 return;
@@ -22,7 +26,7 @@ class RoutingServiceProvider extends ServiceProvider
 
             try {
                 echo $this->app->router->initWp($template);
-            }catch (\Exception $e){
+            } catch (\Exception $e) {
                 if (app()->isLocal()) {
                     throw $e;
                 }
