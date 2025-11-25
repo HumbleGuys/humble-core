@@ -121,11 +121,11 @@ class Route
         if (is_array($this->handler)) {
             [$class, $method] = $this->handler;
 
-            return (new $class)->{$method}(...$arg);
+            return app($class)->{$method}(...$arg);
         }
 
         if (is_string($this->handler) && method_exists($this->handler, '__invoke')) {
-            return (new $this->handler)->__invoke(...$arg);
+            return app($this->handler)->__invoke(...$arg);
         }
 
         throw new UnexpectedValueException("Invalid route action for: [{$this->path}].");
