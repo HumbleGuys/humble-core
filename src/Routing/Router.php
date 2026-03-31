@@ -109,6 +109,7 @@ class Router
                 $res = $route->resolve($arguments ?? []);
                 response($res, 200, [
                     'Cache-Control' => 'public',
+                    'Access-Control-Allow-Origin' => '*',
                 ])->send();
                 exit();
             });
