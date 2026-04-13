@@ -18,11 +18,9 @@ class Route
     {
         if ($this->verb === 'WP') {
             return $this->isMatchingWpRoute();
-        } else {
-            return $this->isMatchingRoute();
         }
 
-        return false;
+        return $this->isMatchingRoute();
     }
 
     public function isMatchingPath(): bool
