@@ -25,21 +25,28 @@ class Route
         return false;
     }
 
-    public function isMatchingRoute()
+    public function isMatchingPath(): bool
     {
         $route = str(request()->server('REQUEST_URI'))
             ->beforeLast('?')
             ->rtrim('/');
 
-        if (request()->server('REQUEST_METHOD') !== $this->verb) {
-            return false;
-        }
-
         $routePath = str($this->path)->explode('/')->map(function ($part) {
             return str($part)->startsWith('{') ? '*' : $part;
         })->join('/');
 
-        return $route->is($routePath) && $route->substrCount('/') === str($routePath)->substrCount('/');
+        return $route->is($routePath)
+            && $route->substrCount('/') === str($routePath)->substrCount('/');
+    }
+
+    public function isMatchingMethod(): bool
+    {
+        return request()->server('REQUEST_METHOD') === $this->verb;
+    }
+
+    public function isMatchingRoute(): bool
+    {
+        return $this->isMatchingMethod() && $this->isMatchingPath();
     }
 
     public function isMatchingWpRoute()

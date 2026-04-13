@@ -3,6 +3,7 @@
 namespace HumbleCore\Routing;
 
 use HumbleCore\Support\Facades\Action;
+use Illuminate\Support\Collection;
 use UnexpectedValueException;
 
 class Router
@@ -80,13 +81,11 @@ class Router
         $this->pathPrefix = '';
     }
 
-    public function resolveRoute()
+    public function resolveRoute(): void
     {
-        $route = collect($this->routes)->filter(function ($route) {
-            return $route->verb !== 'WP';
-        })->first(function ($route) {
-            return $route->isMatching();
-        });
+        $routes = collect($this->routes)->filter(fn (Route $r) => $r->verb !== 'WP');
+
+        $route = $routes->first(fn (Route $r) => $r->isMatching());
 
         if ($route) {
             $this->currentRoute = $route;
@@ -113,7 +112,41 @@ class Router
                 ])->send();
                 exit();
             });
+
+            return;
         }
+
+        $matchingRoutes = $routes->filter(fn (Route $r) => $r->isMatchingPath());
+
+        if (
+            request()->method() === 'OPTIONS' &&
+            $matchingRoutes->isNotEmpty()
+        ) {
+            $this->sendCorsPreflightResponse($matchingRoutes);
+
+            return;
+        }
+    }
+
+    /** @param Collection<int, Route> $matchingRoutes */
+    private function sendCorsPreflightResponse(Collection $matchingRoutes): void
+    {
+        $allowedMethods = $matchingRoutes
+            ->pluck('verb')
+            ->push('OPTIONS')
+            ->unique()
+            ->join(', ');
+
+        $requestedHeaders = trim(request()->server('HTTP_ACCESS_CONTROL_REQUEST_HEADERS') ?? '') ?: 'Content-Type';
+
+        response(status: 204, headers: [
+            'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Allow-Methods' => $allowedMethods,
+            'Access-Control-Allow-Headers' => $requestedHeaders,
+            'Access-Control-Max-Age' => '86400',
+        ])->send();
+
+        exit();
     }
 
     public function initWp($template)
