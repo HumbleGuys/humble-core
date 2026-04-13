@@ -119,7 +119,7 @@ class Router
         $matchingRoutes = $routes->filter(fn (Route $r) => $r->isMatchingPath());
 
         if (
-            request()->method() === 'OPTIONS' &&
+            request()->server('REQUEST_METHOD') === 'OPTIONS' &&
             $matchingRoutes->isNotEmpty()
         ) {
             $this->sendCorsPreflightResponse($matchingRoutes);
