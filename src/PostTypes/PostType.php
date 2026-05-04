@@ -38,6 +38,8 @@ abstract class PostType
 
     public bool $sortable = false;
 
+    public string|bool $query_var = false;
+
     public $archivePage;
 
     public function register(): self
@@ -54,6 +56,7 @@ abstract class PostType
                 'supports' => $this->supports,
                 'menu_position' => $this->menu_position,
                 'rewrite' => $this->rewrite,
+                'query_var' => $this->query_var,
                 'show_in_rest' => $this->show_in_rest,
                 'hierarchical' => $this->hierarchical,
             ]);
