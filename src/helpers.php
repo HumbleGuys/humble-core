@@ -5,7 +5,6 @@ use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 
 if (! function_exists('app')) {
     function app(?string $abstract = null, array $parameters = [])
@@ -21,15 +20,17 @@ if (! function_exists('app')) {
 if (! function_exists('asset')) {
     function asset(?string $path = null): string
     {
-        if (config('app.useTheme') === false) {
-            return Str::startsWith($path, '/') ? $path : "/{$path}";
+        if (config('app.useTheme') === false || ! function_exists('get_template_directory_uri')) {
+            $baseUrl = rtrim(config('app.baseUrl'), '/');
+
+            if ($path === null || $path === '') {
+                return $baseUrl;
+            }
+
+            return $baseUrl.'/'.ltrim($path, '/');
         }
 
-        if (! function_exists('get_template_directory_uri')) {
-            return '/resources/' . $path; // temp fix
-        }
-
-        return get_template_directory_uri() . '/resources/' . $path;
+        return get_template_directory_uri().'/resources/'.ltrim($path ?? '', '/');
     }
 }
 
