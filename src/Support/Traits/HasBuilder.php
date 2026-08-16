@@ -2,6 +2,7 @@
 
 namespace HumbleCore\Support\Traits;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 trait HasBuilder
@@ -30,7 +31,7 @@ trait HasBuilder
         $this->fireAppends();
     }
 
-    public function newInstance(array $attributes = [], array $appends = [])
+    public function newInstance(array $attributes = [], array $appends = []): static
     {
         $model = new static(true);
 
@@ -41,7 +42,8 @@ trait HasBuilder
         return $model;
     }
 
-    public static function hydrate(array $items, array $appends)
+    /** @return Collection<int, static> */
+    public static function hydrate(array $items, array $appends): Collection
     {
         $instance = new static;
 

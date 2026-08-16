@@ -6,7 +6,7 @@ class MailMessage extends Mailer
 {
     public $rows = [];
 
-    public function heading($heading): self
+    public function heading($heading): static
     {
         $this->rows[] = [
             'type' => 'heading',
@@ -16,7 +16,7 @@ class MailMessage extends Mailer
         return $this;
     }
 
-    public function text($content): self
+    public function text($content): static
     {
         $this->rows[] = [
             'type' => 'content',
@@ -26,7 +26,7 @@ class MailMessage extends Mailer
         return $this;
     }
 
-    public function button($label, $url): self
+    public function button($label, $url): static
     {
         $this->rows[] = [
             'type' => 'button',

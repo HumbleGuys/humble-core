@@ -7,6 +7,9 @@ use HumbleCore\Support\Facades\ACF;
 use HumbleCore\Taxonomies\TermModel;
 use Illuminate\Support\Collection;
 
+/**
+ * @template TModel of PostModel
+ */
 class PostBuilder
 {
     public $findId;
@@ -46,13 +49,16 @@ class PostBuilder
 
     public $post;
 
-    public $model;
+    /** @var TModel */
+    public PostModel $model;
 
-    public function __construct($model)
+    /** @param TModel $model */
+    public function __construct(PostModel $model)
     {
         $this->model = $model;
     }
 
+    /** @return TModel */
     public function postType(string $postType): PostModel
     {
         $this->postType = $postType;
@@ -69,6 +75,7 @@ class PostBuilder
         return $this->model;
     }
 
+    /** @return TModel */
     public function name(string $name): PostModel
     {
         $this->postName = $name;
@@ -76,6 +83,7 @@ class PostBuilder
         return $this->model;
     }
 
+    /** @return TModel */
     public function status($status): PostModel
     {
         $this->postStatus = $status;
@@ -83,6 +91,7 @@ class PostBuilder
         return $this->model;
     }
 
+    /** @return TModel */
     public function take(int $take): PostModel
     {
         $this->take = $take;
@@ -90,6 +99,7 @@ class PostBuilder
         return $this->model;
     }
 
+    /** @return TModel */
     public function find($ids): PostModel
     {
         $this->findId = ! empty($ids) ? $ids : -1;
@@ -101,6 +111,7 @@ class PostBuilder
         return $this->model;
     }
 
+    /** @return TModel */
     public function search(string $query): PostModel
     {
         $this->search = urldecode($query);
@@ -108,6 +119,7 @@ class PostBuilder
         return $this->model;
     }
 
+    /** @return TModel */
     public function where($field, $operator = null, $value = null, $type = null, $relation = null): PostModel
     {
         [$value, $operator] = $this->prepareValueAndOperator(
@@ -134,11 +146,13 @@ class PostBuilder
         return $this->model;
     }
 
+    /** @return TModel */
     public function whereDate($field, $operator, $value, $relation = null): PostModel
     {
         return $this->where($field, $operator, $value, 'DATE', $relation);
     }
 
+    /** @return TModel */
     public function whereHasTerm(TermModel $term): PostModel
     {
         $this->taxQuery = [
@@ -154,6 +168,7 @@ class PostBuilder
         return $this->model;
     }
 
+    /** @return TModel */
     public function whereInTerms(Collection $terms, string $relation = 'OR'): PostModel
     {
         $taxQuery = $terms->map(function ($term) {
@@ -174,6 +189,7 @@ class PostBuilder
         return $this->model;
     }
 
+    /** @return TModel */
     public function orderByTitle(string $order = 'asc'): PostModel
     {
         $this->orderBy = 'menu_order';
@@ -182,6 +198,7 @@ class PostBuilder
         return $this->model;
     }
 
+    /** @return TModel */
     public function orderBySortOrder(string $order = 'asc'): PostModel
     {
         $this->orderBy = 'menu_order';
@@ -190,6 +207,7 @@ class PostBuilder
         return $this->model;
     }
 
+    /** @return TModel */
     public function orderByRandom(): PostModel
     {
         $this->orderBy = 'rand';
@@ -198,6 +216,7 @@ class PostBuilder
         return $this->model;
     }
 
+    /** @return TModel */
     public function exclude($ids): PostModel
     {
         $this->excludeIds = is_array($ids) ? $ids : [$ids];
@@ -205,6 +224,7 @@ class PostBuilder
         return $this->model;
     }
 
+    /** @return TModel */
     public function withDate(): PostModel
     {
         $this->withDate = true;
@@ -212,6 +232,7 @@ class PostBuilder
         return $this->model;
     }
 
+    /** @return TModel */
     public function withTitle(): PostModel
     {
         $this->title = true;
@@ -219,6 +240,7 @@ class PostBuilder
         return $this->model;
     }
 
+    /** @return TModel */
     public function withPermalink(): PostModel
     {
         $this->permalink = true;
@@ -226,6 +248,7 @@ class PostBuilder
         return $this->model;
     }
 
+    /** @return TModel */
     public function offset(int $offset): PostModel
     {
         $this->offset = $offset;
@@ -233,6 +256,7 @@ class PostBuilder
         return $this->model;
     }
 
+    /** @return TModel */
     public function withAcf($fields = true): PostModel
     {
         $this->acf = $fields;
@@ -240,6 +264,15 @@ class PostBuilder
         return $this->model;
     }
 
+    /**
+     * @return array{
+     *     current_page: int,
+     *     last_page: int,
+     *     per_page: int,
+     *     data: Collection<int, TModel>,
+     *     total: int
+     * }
+     */
     public function paginate(int $perPage = 20): array
     {
         $currentPage = (int) request('page') ?: 1;
@@ -267,19 +300,22 @@ class PostBuilder
         ];
     }
 
-    public function get()
+    /** @return Collection<int, TModel> */
+    public function get(): Collection
     {
         return $this->model::hydrate($this->getItems(), $this->model->getAppends());
     }
 
-    public function first()
+    /** @return TModel|null */
+    public function first(): ?PostModel
     {
         $this->take = 1;
 
         return $this->get()->first();
     }
 
-    protected function getItems()
+    /** @return array<int, array<string, mixed>> */
+    protected function getItems(): array
     {
         if ($this->findId) {
             $posts = $this->getPosts($this->findId);
@@ -287,15 +323,13 @@ class PostBuilder
             $posts = $this->getPosts();
         }
 
-        if (isset($posts)) {
-            $collection = [];
-            foreach ($posts as $key => $post) {
-                $this->post = $post;
-                $collection[] = $this->getFields();
-            }
-
-            return $collection;
+        $collection = [];
+        foreach ($posts as $post) {
+            $this->post = $post;
+            $collection[] = $this->getFields();
         }
+
+        return $collection;
     }
 
     public function getPosts(?array $postIn = null): array
