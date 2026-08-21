@@ -45,3 +45,19 @@ it('does not render a view until render is called', function (): void {
 it('returns the view factory when called without arguments', function (): void {
     expect(view())->toBeInstanceOf(Factory::class);
 });
+
+it('finds a view whose file is nested in a matching directory', function (): void {
+    $view = view('nestedView', ['name' => 'Nested view']);
+
+    expect($view->getPath())->toEndWith('/nestedView/nestedView.blade.php')
+        ->and($view->render())->toBe('<div>Nested view</div>');
+});
+
+it('resolves regular dotted view names before applying the nested fallback', function (): void {
+    $view = view('emails.message', [
+        'rows' => [['value' => 'Message body']],
+    ]);
+
+    expect($view->getPath())->toEndWith('/emails/message.blade.php')
+        ->and($view->render())->toContain('Message body');
+});

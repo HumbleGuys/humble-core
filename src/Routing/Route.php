@@ -117,6 +117,23 @@ class Route
         return $this->resolve([$id]);
     }
 
+    /** @return list<string> */
+    public function parameters(): array
+    {
+        $requestPath = parse_url((string) request()->server('REQUEST_URI'), PHP_URL_PATH) ?? '';
+        $requestParts = explode('/', trim($requestPath, '/'));
+        $routeParts = explode('/', trim($this->path, '/'));
+        $parameters = [];
+
+        foreach ($routeParts as $index => $part) {
+            if (str_starts_with($part, '{')) {
+                $parameters[] = rawurldecode($requestParts[$index] ?? '');
+            }
+        }
+
+        return $parameters;
+    }
+
     public function resolve($arg = [])
     {
         if (is_callable($this->handler)) {
@@ -146,9 +163,13 @@ class Route
     public function url($key)
     {
         if ($this->verb !== 'WP') {
-            $baseUrl = get_home_url();
+            $path = $this->path;
 
-            return "{$baseUrl}{$this->path}/";
+            if ($key !== null && preg_match('/\{[^}]+\}/', $path, $parameter) === 1) {
+                $path = Str::replaceFirst($parameter[0], rawurlencode((string) $key), $path);
+            }
+
+            return rtrim(get_home_url(), '/').'/'.trim($path, '/').'/';
         }
 
         if ($this->path === 'front-page') {

@@ -40,6 +40,32 @@ it('unsets dynamic attributes without requiring Eloquent relationships', functio
         ->and($model->toArray())->not->toHaveKey('name');
 });
 
+it('supports array access, assignment, casts, mutators and null existence checks', function (): void {
+    $model = new AttributeTestPost(true);
+
+    $model['name'] = '  Humble  ';
+    $model['active'] = '0';
+    $model['nullable'] = null;
+
+    expect($model['name'])->toBe('Humble')
+        ->and($model['active'])->toBeFalse()
+        ->and(isset($model['name']))->toBeTrue()
+        ->and(isset($model['nullable']))->toBeFalse()
+        ->and(isset($model['missing']))->toBeFalse();
+});
+
+it('keeps requested appends on new hydrated instances', function (): void {
+    $model = (new AttributeTestPost)->newInstance([
+        'name' => 'Humble',
+    ], ['label']);
+
+    expect($model->getAppends())->toBe(['label'])
+        ->and($model->toArray())->toMatchArray([
+            'name' => 'Humble',
+            'label' => 'HUMBLE',
+        ]);
+});
+
 final class AttributeTestPost extends PostModel
 {
     protected $postType = 'attribute-test';
@@ -51,5 +77,10 @@ final class AttributeTestPost extends PostModel
     public function getLabelAttribute(): string
     {
         return strtoupper($this->name);
+    }
+
+    public function setNameAttribute(string $name): void
+    {
+        $this->attributes['name'] = trim($name);
     }
 }

@@ -90,22 +90,10 @@ class Router
         if ($route) {
             $this->currentRoute = $route;
 
-            $arguments = [];
-
-            if (str_contains($route->path, '{')) {
-                $requestParts = str(request()->server('REQUEST_URI'))->beforeLast('?')->explode('/');
-
-                $arguments = str($route->path)->explode('/')->map(function ($part, $index) use ($requestParts) {
-                    if (! str($part)->startsWith('{')) {
-                        return;
-                    }
-
-                    return $requestParts[$index];
-                })->filter()->values();
-            }
+            $arguments = $route->parameters();
 
             Action::add('wp_loaded', function () use ($route, $arguments) {
-                $result = $route->resolve($arguments ?? []);
+                $result = $route->resolve($arguments);
                 app(ApiRouteResultHandler::class)->toResponse($result)->send();
                 exit();
             });
