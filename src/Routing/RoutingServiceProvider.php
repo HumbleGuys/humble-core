@@ -9,18 +9,21 @@ class RoutingServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app->singleton('router', function () {
+        $this->app->singleton(Router::class, function () {
             return new Router();
         });
+        $this->app->alias(Router::class, 'router');
 
         $this->app->singleton(WordPressRouteResultHandler::class);
 
-        Filter::add('template_include', function ($template) {
+        $router = $this->app->make(Router::class);
+
+        Filter::add('template_include', function ($template) use ($router) {
             try {
                 if (app()->isProduction() && app()->isUnderConstruction() && ! is_user_logged_in()) {
-                    if (! empty($this->app->router->underConstructionHandler)) {
+                    if (! empty($router->underConstructionHandler)) {
                         $this->app->make(WordPressRouteResultHandler::class)->send(
-                            call_user_func($this->app->router->underConstructionHandler)
+                            call_user_func($router->underConstructionHandler)
                         );
 
                         return;
@@ -32,7 +35,7 @@ class RoutingServiceProvider extends ServiceProvider
                 }
 
                 $this->app->make(WordPressRouteResultHandler::class)->send(
-                    $this->app->router->initWp($template)
+                    $router->initWp($template)
                 );
             } catch (\Throwable $e) {
                 if (app()->isLocal()) {
@@ -41,8 +44,8 @@ class RoutingServiceProvider extends ServiceProvider
 
                 logger()->error($e->getMessage());
 
-                if (! empty($this->app->router->serverErrorHandler)) {
-                    call_user_func($this->app->router->serverErrorHandler, $e);
+                if (! empty($router->serverErrorHandler)) {
+                    call_user_func($router->serverErrorHandler, $e);
                 }
 
                 response('500 error', 500, [

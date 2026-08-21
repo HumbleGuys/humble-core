@@ -183,6 +183,6 @@ class Route
             return get_term_link($key, Str::after($this->path, 'taxonomy-'));
         }
 
-        throw ('Unkown route type');
+        throw new UnexpectedValueException('Unknown route type.');
     }
 }

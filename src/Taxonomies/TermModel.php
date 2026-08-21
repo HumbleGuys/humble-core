@@ -9,6 +9,10 @@ use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Database\Eloquent\Concerns\HidesAttributes;
 use Illuminate\Support\Traits\Conditionable;
 
+/**
+ * @property int $id
+ * @property string $taxonomy
+ */
 class TermModel extends Jsonable
 {
     use Conditionable;
