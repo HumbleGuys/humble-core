@@ -56,6 +56,21 @@ it('does not overwrite explicit API response policies', function (): void {
         ->and($result->headers->get('Cache-Control'))->toContain('no-store');
 });
 
+it('preserves an explicit empty API response', function (): void {
+    $response = new Response(status: 204);
+
+    $result = (new ApiRouteResultHandler)->toResponse($response);
+
+    expect($result)->toBe($response)
+        ->and($result->getStatusCode())->toBe(204)
+        ->and($result->getContent())->toBeEmpty()
+        ->and($result->headers->get('Access-Control-Allow-Origin'))->toBe('*');
+});
+
+it('rejects a null API route result', function (): void {
+    (new ApiRouteResultHandler)->toResponse(null);
+})->throws(UnexpectedValueException::class, 'API route actions must return a response value.');
+
 it('propagates render exceptions', function (): void {
     $result = new class implements Renderable
     {
