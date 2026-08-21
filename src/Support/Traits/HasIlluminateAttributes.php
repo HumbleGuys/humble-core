@@ -83,7 +83,7 @@ trait HasIlluminateAttributes
      */
     public function offsetUnset($offset): void
     {
-        unset($this->attributes[$offset], $this->relations[$offset]);
+        unset($this->attributes[$offset]);
     }
 
     /**
