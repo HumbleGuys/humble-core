@@ -1,6 +1,8 @@
 {
     "name": "humble-guys/humble-core",
+    "description": "Internal WordPress application framework for Humble Guys projects.",
     "type": "library",
+    "license": "proprietary",
     "autoload": {
         "psr-4": {
             "HumbleCore\\": "src/"
