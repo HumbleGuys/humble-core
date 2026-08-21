@@ -35,7 +35,7 @@ jobs:
         run: composer install --prefer-dist --no-interaction --no-progress
 
       - name: Check formatting
-        run: ./vendor/bin/pint --test
+        run: composer test:lint
 
       - name: Run PHPStan
         run: composer analyse

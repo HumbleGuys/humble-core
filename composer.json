@@ -56,7 +56,8 @@
     },
     "scripts": {
         "analyse": "./vendor/bin/phpstan analyse",
-        "lint": "./vendor/bin/pint -v",
+        "lint": "./vendor/bin/pint --parallel",
+        "test:lint": "./vendor/bin/pint --test --parallel",
         "test": "./vendor/bin/pest"
     },
     "config": {
