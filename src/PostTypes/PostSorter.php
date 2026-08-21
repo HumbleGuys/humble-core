@@ -26,7 +26,7 @@ class PostSorter
     {
         $parentSlug = $this->postType->name === 'post' ? 'edit.php' : 'edit.php?post_type='.$this->postType->name;
 
-        $label = trans('Sort') . ' '.$this->postType->labels['name'];
+        $label = trans('Sort').' '.$this->postType->labels['name'];
 
         add_submenu_page(
             $parentSlug,

@@ -4,6 +4,9 @@ namespace HumbleCore\Support\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
+/**
+ * @method static array<string, mixed> getFields(array<int, string>|bool $fields, mixed $post)
+ */
 class ACF extends Facade
 {
     /**

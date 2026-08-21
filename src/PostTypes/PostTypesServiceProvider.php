@@ -9,7 +9,7 @@ class PostTypesServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('postTypes', function () {
-            return new PostTypesRepository();
+            return new PostTypesRepository;
         });
     }
 }

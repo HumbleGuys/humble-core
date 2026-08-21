@@ -11,7 +11,7 @@ trait HasBuilder
 
     protected $exists = false;
 
-    public function __construct($exists = false)
+    final public function __construct(bool $exists = false)
     {
         $this->exists = $exists;
 
@@ -26,9 +26,6 @@ trait HasBuilder
             $this->setAttribute($key, $value);
         }
 
-        $this->castAttributes();
-
-        $this->fireAppends();
     }
 
     public function newInstance(array $attributes = [], array $appends = []): static

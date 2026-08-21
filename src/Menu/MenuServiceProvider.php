@@ -9,7 +9,7 @@ class MenuServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('menu', function () {
-            return new MenuRepository();
+            return new MenuRepository;
         });
     }
 }

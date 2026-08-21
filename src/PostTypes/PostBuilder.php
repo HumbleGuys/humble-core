@@ -102,11 +102,8 @@ class PostBuilder
     /** @return TModel */
     public function find($ids): PostModel
     {
-        $this->findId = ! empty($ids) ? $ids : -1;
-
-        if (! is_array($ids)) {
-            $this->findId = [$this->findId];
-        }
+        $ids = is_array($ids) ? $ids : [$ids];
+        $this->findId = ! empty($ids) ? $ids : [-1];
 
         return $this->model;
     }
@@ -192,7 +189,7 @@ class PostBuilder
     /** @return TModel */
     public function orderByTitle(string $order = 'asc'): PostModel
     {
-        $this->orderBy = 'menu_order';
+        $this->orderBy = 'title';
         $this->order = $order;
 
         return $this->model;
@@ -334,7 +331,7 @@ class PostBuilder
 
     public function getPosts(?array $postIn = null): array
     {
-        $postStatus = [$this->postStatus];
+        $postStatus = is_array($this->postStatus) ? $this->postStatus : [$this->postStatus];
 
         if ($this->take === 1 && is_user_logged_in()) {
             $postStatus[] = 'draft';

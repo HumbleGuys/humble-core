@@ -90,26 +90,11 @@ class Router
         if ($route) {
             $this->currentRoute = $route;
 
-            $arguments = [];
-
-            if (str_contains($route->path, '{')) {
-                $requestParts = str(request()->server('REQUEST_URI'))->beforeLast('?')->explode('/');
-
-                $arguments = str($route->path)->explode('/')->map(function ($part, $index) use ($requestParts) {
-                    if (! str($part)->startsWith('{')) {
-                        return;
-                    }
-
-                    return $requestParts[$index];
-                })->filter()->values();
-            }
+            $arguments = $route->parameters();
 
             Action::add('wp_loaded', function () use ($route, $arguments) {
-                $res = $route->resolve($arguments ?? []);
-                response($res, 200, [
-                    'Cache-Control' => 'public',
-                    'Access-Control-Allow-Origin' => '*',
-                ])->send();
+                $result = $route->resolve($arguments);
+                app(ApiRouteResultHandler::class)->toResponse($result)->send();
                 exit();
             });
 
@@ -149,7 +134,7 @@ class Router
         exit();
     }
 
-    public function initWp($template)
+    public function initWp($template): mixed
     {
         $route = collect($this->routes)->filter(function ($route) {
             return $route->verb === 'WP';
@@ -164,8 +149,6 @@ class Router
         }
 
         throw new UnexpectedValueException('No route found.');
-
-        return $template;
     }
 
     public function setServerErrorHandler(callable $handler)

@@ -2,6 +2,7 @@
 
 namespace HumbleCore\PostTypes;
 
+use ArrayAccess;
 use HumbleCore\Support\Jsonable;
 use HumbleCore\Support\Traits\HasBuilder;
 use HumbleCore\Support\Traits\HasIlluminateAttributes;
@@ -36,7 +37,7 @@ use Illuminate\Support\Traits\Conditionable;
  *
  * @mixin PostBuilder<static>
  */
-class PostModel extends Jsonable
+class PostModel extends Jsonable implements ArrayAccess
 {
     use Conditionable;
     use HasAttributes;

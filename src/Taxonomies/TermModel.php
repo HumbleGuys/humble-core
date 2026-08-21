@@ -2,6 +2,7 @@
 
 namespace HumbleCore\Taxonomies;
 
+use ArrayAccess;
 use HumbleCore\Support\Jsonable;
 use HumbleCore\Support\Traits\HasBuilder;
 use HumbleCore\Support\Traits\HasIlluminateAttributes;
@@ -9,7 +10,11 @@ use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Database\Eloquent\Concerns\HidesAttributes;
 use Illuminate\Support\Traits\Conditionable;
 
-class TermModel extends Jsonable
+/**
+ * @property int $id
+ * @property string $taxonomy
+ */
+class TermModel extends Jsonable implements ArrayAccess
 {
     use Conditionable;
     use HasAttributes;

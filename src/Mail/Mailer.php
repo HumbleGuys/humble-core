@@ -105,7 +105,7 @@ class Mailer
     public function template(string $template, array $mailData): static
     {
         $this->mailData = $mailData;
-        $this->body = view($template, $mailData);
+        $this->body = view($template, $mailData)->render();
 
         return $this;
     }

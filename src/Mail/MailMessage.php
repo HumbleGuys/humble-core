@@ -39,6 +39,6 @@ class MailMessage extends Mailer
 
     public function getBody(): string
     {
-        return view('emails.message', ['rows' => $this->rows]);
+        return view('emails.message', ['rows' => $this->rows])->render();
     }
 }
