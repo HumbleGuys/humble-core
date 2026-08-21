@@ -40,6 +40,7 @@ class PostBuilder
 
     private $metaQuery = [
         'relation' => 'AND',
+        'metaFilters' => [],
     ];
 
     public $taxQuery;
@@ -124,11 +125,15 @@ class PostBuilder
             func_num_args() === 2
         );
 
-        if ($relation) {
-            $this->metaQuery['relation'] = $relation;
+        if (empty($this->metaQuery['metaFilters']['relation'])) {
+            $this->metaQuery['metaFilters']['relation'] = 'AND';
         }
 
-        $this->metaQuery[] = [
+        if ($relation) {
+            $this->metaQuery['metaFilters']['relation'] = $relation;
+        }
+
+        $this->metaQuery['metaFilters'][] = [
             'key' => $field,
             'value' => $value,
             'type' => $type,
@@ -149,9 +154,11 @@ class PostBuilder
     {
         $this->taxQuery = [
             [
-                'taxonomy' => $term->taxonomy,
-                'field' => 'term_id',
-                'terms' => $term->id,
+                [
+                    'taxonomy' => $term->taxonomy,
+                    'field' => 'term_id',
+                    'terms' => $term->id,
+                ],
             ],
         ];
 
@@ -170,8 +177,10 @@ class PostBuilder
         })->all();
 
         $this->taxQuery = [
-            'relation' => $relation,
-            ...$taxQuery,
+            [
+                'relation' => $relation,
+                ...$taxQuery,
+            ],
         ];
 
         return $this->model;

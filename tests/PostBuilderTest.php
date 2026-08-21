@@ -29,7 +29,10 @@ it('builds the default WordPress post query', function (): void {
             'tax_query' => null,
             's' => null,
             'suppress_filters' => false,
-            'meta_query' => ['relation' => 'AND'],
+            'meta_query' => [
+                'relation' => 'AND',
+                'metaFilters' => [],
+            ],
         ]]);
 });
 
@@ -55,24 +58,27 @@ it('transfers fluent scalar options to the WordPress query', function (): void {
     ]);
 });
 
-it('builds valid WordPress meta query clauses', function (): void {
+it('groups WordPress meta query clauses under their own relation', function (): void {
     BuilderTestPost::where('featured', true)
         ->whereDate('startDate', '<=', '20260821')
         ->get();
 
     expect(WordPressFunctions::$getPostsCalls[0]['meta_query'])->toBe([
         'relation' => 'AND',
-        [
-            'key' => 'featured',
-            'value' => true,
-            'type' => null,
-            'compare' => '=',
-        ],
-        [
-            'key' => 'startDate',
-            'value' => '20260821',
-            'type' => 'DATE',
-            'compare' => '<=',
+        'metaFilters' => [
+            'relation' => 'AND',
+            [
+                'key' => 'featured',
+                'value' => true,
+                'type' => null,
+                'compare' => '=',
+            ],
+            [
+                'key' => 'startDate',
+                'value' => '20260821',
+                'type' => 'DATE',
+                'compare' => '<=',
+            ],
         ],
     ]);
 });
@@ -106,7 +112,7 @@ it('preserves status arrays and includes unpublished posts for logged-in first q
     ]);
 });
 
-it('builds valid taxonomy queries', function (): void {
+it('groups taxonomy clauses under their own relation', function (): void {
     $category = new TermModel(true);
     $category->taxonomy = 'category';
     $category->id = 7;
@@ -119,9 +125,11 @@ it('builds valid taxonomy queries', function (): void {
 
     expect(WordPressFunctions::$getPostsCalls[0]['tax_query'])->toBe([
         [
-            'taxonomy' => 'category',
-            'field' => 'term_id',
-            'terms' => 7,
+            [
+                'taxonomy' => 'category',
+                'field' => 'term_id',
+                'terms' => 7,
+            ],
         ],
     ]);
 
@@ -130,16 +138,18 @@ it('builds valid taxonomy queries', function (): void {
     BuilderTestPost::whereInTerms(collect([$category, $tag]))->get();
 
     expect(WordPressFunctions::$getPostsCalls[0]['tax_query'])->toBe([
-        'relation' => 'OR',
         [
-            'taxonomy' => 'category',
-            'field' => 'term_id',
-            'terms' => 7,
-        ],
-        [
-            'taxonomy' => 'post_tag',
-            'field' => 'term_id',
-            'terms' => 9,
+            'relation' => 'OR',
+            [
+                'taxonomy' => 'category',
+                'field' => 'term_id',
+                'terms' => 7,
+            ],
+            [
+                'taxonomy' => 'post_tag',
+                'field' => 'term_id',
+                'terms' => 9,
+            ],
         ],
     ]);
 });
