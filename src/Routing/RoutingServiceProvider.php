@@ -10,7 +10,7 @@ class RoutingServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(Router::class, function () {
-            return new Router();
+            return new Router;
         });
         $this->app->alias(Router::class, 'router');
 

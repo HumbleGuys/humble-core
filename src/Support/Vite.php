@@ -160,7 +160,7 @@ class Vite implements Htmlable
     public function useScriptTagAttributes($attributes)
     {
         if (! is_callable($attributes)) {
-            $attributes = fn() => $attributes;
+            $attributes = fn () => $attributes;
         }
 
         $this->scriptTagAttributesResolvers[] = $attributes;
@@ -177,7 +177,7 @@ class Vite implements Htmlable
     public function useStyleTagAttributes($attributes)
     {
         if (! is_callable($attributes)) {
-            $attributes = fn() => $attributes;
+            $attributes = fn () => $attributes;
         }
 
         $this->styleTagAttributesResolvers[] = $attributes;
@@ -190,9 +190,9 @@ class Vite implements Htmlable
      *
      * @param  string|string[]  $entrypoints
      * @param  string|null  $buildDirectory
-     * @return \Illuminate\Support\HtmlString
+     * @return HtmlString
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function __invoke($entrypoints, $buildDirectory = null)
     {
@@ -203,7 +203,7 @@ class Vite implements Htmlable
             return new HtmlString(
                 $entrypoints
                     ->prepend('@vite/client')
-                    ->map(fn($entrypoint) => $this->makeTagForChunk($entrypoint, $this->hotAsset($entrypoint), null, null))
+                    ->map(fn ($entrypoint) => $this->makeTagForChunk($entrypoint, $this->hotAsset($entrypoint), null, null))
                     ->join('')
             );
         }
@@ -247,9 +247,9 @@ class Vite implements Htmlable
             }
         }
 
-        [$stylesheets, $scripts] = $tags->partition(fn($tag) => str_starts_with($tag, '<link'));
+        [$stylesheets, $scripts] = $tags->partition(fn ($tag) => str_starts_with($tag, '<link'));
 
-        return new HtmlString($stylesheets->join('') . $scripts->join(''));
+        return new HtmlString($stylesheets->join('').$scripts->join(''));
     }
 
     /**
@@ -388,7 +388,7 @@ class Vite implements Htmlable
             'nonce' => $this->nonce ?? false,
         ], $attributes));
 
-        return '<script ' . implode(' ', $attributes) . '></script>';
+        return '<script '.implode(' ', $attributes).'></script>';
     }
 
     /**
@@ -406,7 +406,7 @@ class Vite implements Htmlable
             'nonce' => $this->nonce ?? false,
         ], $attributes));
 
-        return '<link ' . implode(' ', $attributes) . ' />';
+        return '<link '.implode(' ', $attributes).' />';
     }
 
     /**
@@ -429,9 +429,9 @@ class Vite implements Htmlable
     protected function parseAttributes($attributes)
     {
         return Collection::make($attributes)
-            ->reject(fn($value, $key) => in_array($value, [false, null], true))
-            ->flatMap(fn($value, $key) => $value === true ? [$key] : [$key => $value])
-            ->map(fn($value, $key) => is_int($key) ? $value : $key . '="' . $value . '"')
+            ->reject(fn ($value, $key) => in_array($value, [false, null], true))
+            ->flatMap(fn ($value, $key) => $value === true ? [$key] : [$key => $value])
+            ->map(fn ($value, $key) => is_int($key) ? $value : $key.'="'.$value.'"')
             ->values()
             ->all();
     }
@@ -439,7 +439,7 @@ class Vite implements Htmlable
     /**
      * Generate React refresh runtime script.
      *
-     * @return \Illuminate\Support\HtmlString|void
+     * @return HtmlString|void
      */
     public function reactRefresh()
     {
@@ -496,7 +496,7 @@ class Vite implements Htmlable
 
         $chunk = $this->chunk($this->manifest($buildDirectory), $asset);
 
-        return asset($buildDirectory . '/' . $chunk['file']);
+        return asset($buildDirectory.'/'.$chunk['file']);
     }
 
     /**
@@ -505,7 +505,7 @@ class Vite implements Htmlable
      * @param  string  $buildDirectory
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function manifest($buildDirectory)
     {
@@ -530,7 +530,7 @@ class Vite implements Htmlable
      */
     protected function manifestPath($buildDirectory)
     {
-        $path = $buildDirectory . '/.vite/manifest.json';
+        $path = $buildDirectory.'/.vite/manifest.json';
 
         if (config('app.useTheme') === false) {
             return publicPath($path);
@@ -546,7 +546,7 @@ class Vite implements Htmlable
      * @param  string  $file
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function chunk($manifest, $file)
     {
@@ -576,7 +576,7 @@ class Vite implements Htmlable
 
         return false;
 
-        //return is_file($this->hotFile());
+        // return is_file($this->hotFile());
     }
 
     /**

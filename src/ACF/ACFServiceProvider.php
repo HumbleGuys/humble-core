@@ -38,7 +38,5 @@ class ACFServiceProvider extends ServiceProvider
         Filter::add('acf/fields/post_object/query', [ACFAdminFilters::class, 'relationshipQuery']);
     }
 
-    public function boot()
-    {
-    }
+    public function boot() {}
 }

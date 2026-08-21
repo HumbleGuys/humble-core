@@ -4,9 +4,7 @@ namespace HumbleCore\Menu;
 
 class MenuBuilder
 {
-    public function __construct(public string $name)
-    {
-    }
+    public function __construct(public string $name) {}
 
     public function get()
     {

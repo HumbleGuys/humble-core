@@ -1,10 +1,18 @@
 <?php
 
 use HumbleCore\App\Application;
+use Illuminate\Cache\CacheManager;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Contracts\Translation\Translator;
+use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Contracts\View\Factory as ViewFactory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Contracts\View\View as ViewContract;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Log\LogManager;
 use Illuminate\Support\Arr;
 
 if (! function_exists('app')) {
@@ -83,9 +91,9 @@ if (! function_exists('cache')) {
      *
      * If an array is passed, we'll assume you want to put to the cache.
      *
-     * @return mixed|\Illuminate\Cache\CacheManager
+     * @return mixed|CacheManager
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     function cache()
     {
@@ -148,7 +156,7 @@ if (! function_exists('logger')) {
      * Log a debug message to the logs.
      *
      * @param  string|null  $message
-     * @return \Illuminate\Log\LogManager|null
+     * @return LogManager|null
      */
     function logger($message = null, array $context = [])
     {
@@ -174,13 +182,13 @@ if (! function_exists('menu')) {
 if (! function_exists('svg')) {
     function svg(string $name, string $class = '')
     {
-        $svg = file_get_contents(resourcePath('assets/images/' . $name . '.svg'));
+        $svg = file_get_contents(resourcePath('assets/images/'.$name.'.svg'));
 
         if (empty($class)) {
             return $svg;
         }
 
-        $doc = new \DOMDocument;
+        $doc = new DOMDocument;
         $doc->loadXML($svg);
 
         foreach ($doc->getElementsByTagName('svg') as $item) {
@@ -208,9 +216,9 @@ if (! function_exists('response')) {
     /**
      * Return a new response from the application.
      *
-     * @param  \Illuminate\Contracts\View\View|string|array|null  $content
+     * @param  View|string|array|null  $content
      * @param  int  $status
-     * @return \Illuminate\Http\Response|\Illuminate\Contracts\Routing\ResponseFactory
+     * @return Response|ResponseFactory
      */
     function response($content = '', $status = 200, array $headers = [])
     {
@@ -224,7 +232,7 @@ if (! function_exists('request')) {
      *
      * @param  array|string|null  $key
      * @param  mixed  $default
-     * @return mixed|\Illuminate\Http\Request|string|array|null
+     * @return mixed|Request|string|array|null
      */
     function request($key = null, $default = null)
     {
@@ -250,7 +258,7 @@ if (! function_exists('route')) {
         $url = $route->url($key);
 
         if (! empty($query)) {
-            $url .= '?' . Arr::query($query);
+            $url .= '?'.Arr::query($query);
         }
 
         return $url;
@@ -270,7 +278,7 @@ if (! function_exists('trans')) {
      *
      * @param  string|null  $key
      * @param  array  $replace
-     * @return \Illuminate\Contracts\Translation\Translator|string|array|null
+     * @return Translator|string|array|null
      */
     function trans($key = null, $replace = [])
     {
@@ -286,7 +294,7 @@ if (! function_exists('validator')) {
     /**
      * Create a new Validator instance.
      *
-     * @return \Illuminate\Contracts\Validation\Validator|\Illuminate\Contracts\Validation\Factory
+     * @return Validator|Factory
      */
     function validator(array $data = [], array $rules = [], array $messages = [], array $customAttributes = [])
     {
@@ -329,7 +337,7 @@ if (! function_exists('value')) {
      * @template TValue
      * @template TArgs
      *
-     * @param  TValue|\Closure(TArgs): TValue  $value
+     * @param  TValue|Closure(TArgs): TValue  $value
      * @param  TArgs  ...$args
      * @return TValue
      */
@@ -352,14 +360,13 @@ if (! function_exists('view')) {
     }
 }
 
-
 if (! function_exists('when')) {
     /**
      * Return a value if the given condition is true.
      *
      * @param  mixed  $condition
-     * @param  \Closure|mixed  $value
-     * @param  \Closure|mixed  $default
+     * @param  Closure|mixed  $value
+     * @param  Closure|mixed  $default
      * @return mixed
      */
     function when($condition, $value, $default = null)

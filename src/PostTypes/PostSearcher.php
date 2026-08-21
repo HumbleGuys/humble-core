@@ -4,7 +4,8 @@ namespace HumbleCore\PostTypes;
 
 use HumbleCore\Support\Facades\Action;
 
-class PostSearcher {
+class PostSearcher
+{
     public $postType;
 
     public function __construct(PostType $postType)
@@ -14,7 +15,8 @@ class PostSearcher {
         Action::add('acf/save_post', [$this, 'handlePostUpdate'], 100);
     }
 
-    public function handlePostUpdate($postId) {
+    public function handlePostUpdate($postId)
+    {
         if (get_post_type($postId) === $this->postType->name) {
             $model = (new $this->postType->model)->find($postId)->withAcf()->withTitle()->first();
 
@@ -22,7 +24,8 @@ class PostSearcher {
         }
     }
 
-    public function updateSearchText($model) {
+    public function updateSearchText($model)
+    {
         $data = $this->postType->searchable($model);
 
         Action::remove('acf/save_post', [$this, 'handlePostUpdate'], 100);
@@ -31,7 +34,7 @@ class PostSearcher {
 
         wp_update_post([
             'ID' => $model->id,
-            'post_content' => $content
+            'post_content' => $content,
         ]);
     }
 }

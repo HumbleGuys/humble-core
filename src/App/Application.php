@@ -3,7 +3,6 @@
 namespace HumbleCore\App;
 
 use HumbleCore\Support\Vite;
-use Illuminate\Cache\CacheManager;
 use Illuminate\Cache\CacheServiceProvider;
 use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
@@ -17,8 +16,12 @@ use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Translation\TranslationServiceProvider;
+use Illuminate\Validation\Factory;
 use Illuminate\Validation\ValidationServiceProvider;
 use Whoops\Handler\Handler;
+use Whoops\Handler\PlainTextHandler;
+use Whoops\Handler\PrettyPageHandler;
+use Whoops\Run;
 
 class Application extends Container
 {
@@ -83,9 +86,9 @@ class Application extends Container
     public function registerErrorHandler()
     {
         if ($this->runningInConsole()) {
-            $whoops = new \Whoops\Run;
+            $whoops = new Run;
 
-            $whoops->prependHandler(new \Whoops\Handler\PlainTextHandler);
+            $whoops->prependHandler(new PlainTextHandler);
 
             $whoops->register();
 
@@ -93,9 +96,9 @@ class Application extends Container
         }
 
         if (Env::get('APP_DEBUG', false) === true) {
-            $whoops = new \Whoops\Run;
+            $whoops = new Run;
 
-            $whoops->prependHandler(new \Whoops\Handler\PrettyPageHandler);
+            $whoops->prependHandler(new PrettyPageHandler);
 
             $whoops->prependHandler(function () {
                 // Hides sensible information of env isnt set to local
@@ -109,7 +112,7 @@ class Application extends Container
 
             $whoops->register();
         } else {
-            $whoops = new \Whoops\Run;
+            $whoops = new Run;
 
             $whoops->prependHandler(function ($exception) {
                 logger()->error($exception->getMessage());
@@ -438,7 +441,7 @@ class Application extends Container
     protected function registerCoreContainerAliases()
     {
         foreach ([
-            'validator' => [\Illuminate\Validation\Factory::class, \Illuminate\Contracts\Validation\Factory::class],
+            'validator' => [Factory::class, \Illuminate\Contracts\Validation\Factory::class],
             'view' => [\Illuminate\View\Factory::class, \Illuminate\Contracts\View\Factory::class],
         ] as $key => $aliases) {
             foreach ($aliases as $alias) {

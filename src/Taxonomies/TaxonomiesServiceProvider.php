@@ -10,7 +10,7 @@ class TaxonomiesServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('taxonomies', function () {
-            return new TaxonomiesRepository();
+            return new TaxonomiesRepository;
         });
 
         Filter::add('wp_terms_checklist_args', function ($args) {
