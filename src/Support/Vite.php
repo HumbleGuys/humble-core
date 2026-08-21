@@ -5,6 +5,7 @@ namespace HumbleCore\Support;
 use Exception;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
@@ -563,7 +564,7 @@ class Vite implements Htmlable
      */
     protected function isRunningHot()
     {
-        if ($_ENV['APP_ENV'] === 'local') {
+        if (Env::get('APP_ENV', 'production') === 'local') {
             try {
                 Http::get('http://localhost:5173');
 

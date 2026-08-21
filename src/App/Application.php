@@ -92,14 +92,14 @@ class Application extends Container
             return;
         }
 
-        if ($_ENV['APP_DEBUG'] == 'true') {
+        if (Env::get('APP_DEBUG', false) === true) {
             $whoops = new \Whoops\Run;
 
             $whoops->prependHandler(new \Whoops\Handler\PrettyPageHandler);
 
             $whoops->prependHandler(function () {
                 // Hides sensible information of env isnt set to local
-                if ($_ENV['APP_ENV'] !== 'local') {
+                if (! $this->isLocal()) {
                     $_ENV = [];
                     $_SERVER = [];
                 }
@@ -393,12 +393,12 @@ class Application extends Container
 
     public function isProduction(): bool
     {
-        return $_ENV['APP_ENV'] === 'production';
+        return Env::get('APP_ENV', 'production') === 'production';
     }
 
     public function isLocal(): bool
     {
-        return $_ENV['APP_ENV'] === 'local';
+        return Env::get('APP_ENV', 'production') === 'local';
     }
 
     public function isUnderConstruction()
