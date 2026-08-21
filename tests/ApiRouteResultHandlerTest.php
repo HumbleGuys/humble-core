@@ -39,7 +39,21 @@ it('preserves an existing API response', function (): void {
     expect($result)->toBe($response)
         ->and($result->getStatusCode())->toBe(201)
         ->and($result->headers->get('X-Test'))->toBe('preserved')
-        ->and($result->headers->has('Access-Control-Allow-Origin'))->toBeFalse();
+        ->and($result->headers->get('Access-Control-Allow-Origin'))->toBe('*');
+});
+
+it('does not overwrite explicit API response policies', function (): void {
+    $response = new Response('Private', 200, [
+        'Access-Control-Allow-Origin' => 'https://contest.example',
+        'Cache-Control' => 'private, no-store',
+    ]);
+
+    $result = (new ApiRouteResultHandler)->toResponse($response);
+
+    expect($result)->toBe($response)
+        ->and($result->headers->get('Access-Control-Allow-Origin'))->toBe('https://contest.example')
+        ->and($result->headers->get('Cache-Control'))->toContain('private')
+        ->and($result->headers->get('Cache-Control'))->toContain('no-store');
 });
 
 it('propagates render exceptions', function (): void {

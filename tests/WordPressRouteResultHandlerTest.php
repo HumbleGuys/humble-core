@@ -73,9 +73,12 @@ it('renders a lazy view when the handler consumes it', function (): void {
         ->and(file_get_contents($sideEffectPath))->toBe('rendered');
 });
 
-it('rejects unsupported WordPress route results', function (): void {
-    (new WordPressRouteResultHandler)->send(['unsupported']);
-})->throws(UnexpectedValueException::class);
+it('rejects unsupported WordPress route results', function (mixed $result): void {
+    (new WordPressRouteResultHandler)->send($result);
+})->with([
+    'array' => [['unsupported']],
+    'null' => [null],
+])->throws(UnexpectedValueException::class);
 
 it('propagates render exceptions', function (): void {
     $result = new class implements Renderable
