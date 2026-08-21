@@ -13,31 +13,39 @@ class RoutingServiceProvider extends ServiceProvider
             return new Router();
         });
 
+        $this->app->singleton(WordPressRouteResultHandler::class);
+
         Filter::add('template_include', function ($template) {
-            if (app()->isProduction() && app()->isUnderConstruction() && ! is_user_logged_in()) {
-                if (!empty($this->app->router->underConstructionHandler)) {
-                    return call_user_func($this->app->router->underConstructionHandler);
+            try {
+                if (app()->isProduction() && app()->isUnderConstruction() && ! is_user_logged_in()) {
+                    if (! empty($this->app->router->underConstructionHandler)) {
+                        $this->app->make(WordPressRouteResultHandler::class)->send(
+                            call_user_func($this->app->router->underConstructionHandler)
+                        );
+
+                        return;
+                    }
+
+                    echo get_bloginfo('name');
+
+                    return;
                 }
 
-                echo get_bloginfo('name');
-
-                return;
-            }
-
-            try {
-                echo $this->app->router->initWp($template);
-            } catch (\Exception $e) {
+                $this->app->make(WordPressRouteResultHandler::class)->send(
+                    $this->app->router->initWp($template)
+                );
+            } catch (\Throwable $e) {
                 if (app()->isLocal()) {
                     throw $e;
                 }
 
                 logger()->error($e->getMessage());
 
-                if (!empty($this->app->router->serverErrorHandler)) {
+                if (! empty($this->app->router->serverErrorHandler)) {
                     call_user_func($this->app->router->serverErrorHandler, $e);
                 }
 
-                response("500 error", 500, [
+                response('500 error', 500, [
                     'Cache-Control' => 'no-cache',
                 ])->send();
 

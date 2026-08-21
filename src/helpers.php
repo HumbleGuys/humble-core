@@ -3,6 +3,7 @@
 use HumbleCore\App\Application;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Contracts\View\Factory as ViewFactory;
+use Illuminate\Contracts\View\View as ViewContract;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 
@@ -341,7 +342,7 @@ if (! function_exists('value')) {
 }
 
 if (! function_exists('view')) {
-    function view(?string $view = null, array $data = [], array $mergeData = []): string
+    function view(?string $view = null, array $data = [], array $mergeData = []): ViewFactory|ViewContract
     {
         $factory = app(ViewFactory::class);
 
@@ -349,7 +350,7 @@ if (! function_exists('view')) {
             return $factory;
         }
 
-        return $factory->make($view, $data, $mergeData)->render();
+        return $factory->make($view, $data, $mergeData);
     }
 }
 

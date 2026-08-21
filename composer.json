@@ -9,6 +9,11 @@
             "src/helpers.php"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Kim Larsson",
@@ -41,10 +46,11 @@
         "league/flysystem": "^3.24"
     },
     "require-dev": {
-        "pestphp/pest": "^1.21",
-        "laravel/pint": "^1.1.0",
-        "phpstan/phpstan": "^1.8",
-        "10up/wp_mock": "0.4.2"
+        "laravel/pint": "^1.16",
+        "pestphp/pest": "^2.36",
+        "php-stubs/acf-pro-stubs": "^6.3",
+        "php-stubs/wordpress-stubs": "^6.6",
+        "phpstan/phpstan": "^2.2"
     },
     "scripts": {
         "analyse": "./vendor/bin/phpstan analyse",
