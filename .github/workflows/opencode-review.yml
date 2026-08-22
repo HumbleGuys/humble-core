@@ -19,10 +19,8 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
       - uses: anomalyco/opencode/github@latest
-        env:
-          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
-          model: opencode-go/glm-5.2
+          model: glm-5.2
           variant: high
           prompt: |
             Review the changes in this pull request for actionable defects.
