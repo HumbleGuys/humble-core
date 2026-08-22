@@ -1,0 +1,86 @@
+name: opencode-review
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
+    branches: ["main"]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: read
+      issues: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: anomalyco/opencode/github@latest
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+        with:
+          model: opencode-go/glm-5.2
+          variant: high
+          prompt: |
+            Review the changes in this pull request for actionable defects.
+
+            Your primary goal is precision, not coverage. This is an independent
+            final sanity check, not a request for general improvement suggestions.
+
+            Gather enough context before reaching a conclusion:
+            - Review the pull request description and the complete changed files when needed.
+            - Consider existing tests, callers, project conventions, and related code.
+            - Only review changes introduced by this pull request.
+            - Do not judge code from an isolated diff hunk.
+
+            Look for:
+            - Incorrect logic and realistic edge cases.
+            - Security, authorization, privacy, or data exposure issues.
+            - Data loss, corruption, or invalid persisted state.
+            - Unintended behavior, API, contract, or compatibility changes.
+            - Broken or misleading error handling.
+            - Clear performance regressions, such as N+1 queries or unbounded work.
+            - Objectively incorrect or misleading text, labels, names, configuration,
+              or public contracts, including clear typos, stale wording, and copy-paste
+              mistakes. Do not report subjective wording or naming preferences.
+
+            Use existing architecture, abstractions, and conventions as context when
+            determining whether the changed code is correct. Do not report structural
+            differences unless they create a concrete correctness, security,
+            compatibility, or significant maintainability risk.
+
+            Only report an issue when all of the following are true:
+            - It was introduced by this pull request.
+            - A realistic scenario triggers it.
+            - It has a concrete negative effect.
+            - You are confident it is real after checking the surrounding context.
+            - The author would likely want to fix it before merging.
+
+            Do not report:
+            - Subjective style, naming, formatting, readability, or wording preferences.
+            - Optional refactors, alternative implementations, or additional abstractions.
+            - Structural differences that do not create a concrete problem.
+            - Intended behavior changes documented by the pull request.
+            - Purely hypothetical edge cases without a realistic trigger.
+            - Pre-existing issues that this pull request does not worsen.
+            - Missing tests unless a specific likely defect in the changed behavior would
+              otherwise be left undetected.
+            - Praise, change summaries, general approval commentary, or a verdict.
+
+            For each finding:
+            - Include the severity: critical, high, medium, or low.
+            - Include the file and line number.
+            - Explain the concrete triggering scenario and resulting incorrect behavior.
+            - Keep the finding concise and actionable.
+            - Suggest a test only when it directly verifies the reported defect.
+
+            Order findings by severity. Do not present uncertain concerns as findings.
+            If no qualifying issues are found, respond only with: "No actionable findings."
+
+            Do not run tests, builds, linters, formatters, package installs, database
+            commands, or other verification commands. CI is responsible for automated
+            verification. You may use read-only commands to inspect repository files,
+            history, and diffs when necessary to understand the change.
