@@ -102,6 +102,10 @@ class ACFTransformer
             return $link;
         }
 
+        if (is_array($link) && is_string($link['title'] ?? null)) {
+            $link['title'] = html_entity_decode($link['title'], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        }
+
         return (object) $link;
     }
 
