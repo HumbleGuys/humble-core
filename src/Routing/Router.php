@@ -4,7 +4,6 @@ namespace HumbleCore\Routing;
 
 use HumbleCore\Support\Facades\Action;
 use Illuminate\Support\Collection;
-use UnexpectedValueException;
 
 class Router
 {
@@ -136,19 +135,26 @@ class Router
 
     public function initWp($template): mixed
     {
-        $route = collect($this->routes)->filter(function ($route) {
-            return $route->verb === 'WP';
-        })->first(function ($route) {
-            return $route->isMatching();
-        });
+        $routes = collect($this->routes)->filter(fn (Route $route) => $route->verb === 'WP');
+        $route = $routes->first(fn (Route $route) => $route->isMatching());
+
+        if (! $route) {
+            global $wp_query;
+
+            $wp_query->set_404();
+            status_header(404);
+            nocache_headers();
+
+            $route = $routes->firstWhere('path', '404');
+        }
+
+        $this->currentRoute = $route;
 
         if ($route) {
-            $this->currentRoute = $route;
-
             return $route->resolveWpRoute();
         }
 
-        throw new UnexpectedValueException('No route found.');
+        return response('Not Found', 404, ['Cache-Control' => 'no-cache']);
     }
 
     public function setServerErrorHandler(callable $handler)
